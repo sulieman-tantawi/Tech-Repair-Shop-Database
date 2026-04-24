@@ -1,0 +1,283 @@
+/* =========================================
+   1. Main Background
+   ========================================= */
+#mainPane {
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+}
+
+/* =========================================
+   2. Custom Buttons (.my-btn)
+   ========================================= */
+.my-btn {
+    -fx-background-color: #0096FF;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 19px;
+    -fx-font-weight: 700; 
+    -fx-font-smoothing-type: gray;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+.my-btn:hover { -fx-background-color: #007ACC; -fx-background-insets: 0; }
+.my-btn:pressed { -fx-background-color: #005C99; -fx-background-insets: 0; }
+
+/* =========================================
+   3. ADMIN TABLE & TABS (كودك الأصلي - لإنقاذ الإدمن)
+   ========================================= */
+.table-view .column-header-background {
+    -fx-background-radius: 15 15 0 0;
+    -fx-background-color: rgba(220, 220, 220, 0.5);
+}
+.table-view .column-header {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
+.table-view .filler,
+.table-view .column-header-background .filler,
+.table-view .corner {
+    -fx-background-color: transparent;
+}
+.table-view .scroll-bar:vertical,
+.table-view .scroll-bar:vertical .track,
+.table-view .scroll-bar:vertical .track-background {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.table-view .viewport {
+    -fx-background-color: transparent;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: rgba(200, 200, 200, 0.3);
+    -fx-text-fill: #000000;
+}
+.table-row-cell:empty {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+.table-row-cell:selected {
+    -fx-background-color: rgba(0, 150, 255, 0.4);
+}
+.tab-pane .tab-content-area { -fx-background-color: transparent; }
+.tab-pane .tab-header-background { -fx-background-color: transparent; }
+.tab-pane .tab {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-radius: 10 10 0 0; 
+    -fx-padding: 8 20 8 20; 
+}
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, black, 3, 0.5, 0, 1);
+}
+.tab-pane .tab:selected { -fx-background-color: rgba(255, 255, 255, 0.85); }
+.tab-pane .tab:selected .tab-label { -fx-text-fill: #000000; -fx-effect: none; }
+.table-view .column-header .label { -fx-alignment: center; }
+.table-cell { -fx-alignment: center; }
+
+/* =========================================
+   4. RECEPTION GLASS TABLE (مخصص بس للاستقبال)
+   ========================================= */
+.glass-table,
+.glass-table .viewport,
+.glass-table .sheet,
+.glass-table .virtual-flow,
+.glass-table .clipped-container {
+    -fx-background-color: transparent !important;
+    -fx-background: transparent !important;
+    -fx-control-inner-background: transparent !important;
+    -fx-border-color: transparent !important;
+    -fx-border-width: 0 !important; /* نسف الحواف الخارجية */
+    -fx-background-insets: 0 !important; /* إزالة أي تباعد للإطار */
+    -fx-padding: 0;
+}
+.glass-table .column-header-background {
+    -fx-background-color: rgba(255, 255, 255, 0.15) !important;
+}
+.glass-table .column-header {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+}
+.glass-table .column-header .label {
+    -fx-text-fill: #1e293b;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-alignment: center; /* 👈 توسيط أسماء الأعمدة */
+}
+.glass-table .table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.2); 
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: rgba(255, 255, 255, 0.1); 
+    -fx-cell-size: 45px;
+}
+.glass-table .table-row-cell:odd { -fx-background-color: rgba(255, 255, 255, 0.1); }
+.glass-table .table-row-cell:hover { -fx-background-color: rgba(255, 255, 255, 0.4); }
+.glass-table .table-row-cell:selected { -fx-background-color: rgba(59, 130, 246, 0.6); }
+.glass-table .table-row-cell:empty { -fx-background-color: transparent !important; -fx-border-width: 0 !important; }
+.glass-table .table-cell { -fx-alignment: center; } /* تأكيد توسيط الداتا كمان */
+/* 🔥 تظبيط لون الخط جوا الجدول الزجاجي 🔥 */
+.glass-table .table-cell { 
+    -fx-alignment: center; 
+    -fx-text-fill: #1e293b; /* لون كحلي غامق فخم وواضح جداً للعين */
+    -fx-font-size: 14px;
+    -fx-font-weight: bold; /* خليناه عريض شوي عشان يبرز عن الزجاج */
+} 
+
+/* لما تحدد السطر (يصير أزرق)، الخط لازم يقلب أبيض عشان يضل مقروء */
+.glass-table .table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+
+/* =========================================
+   5. DIALOG & POPUP STYLES (شاشات الإضافة المنبثقة)
+   ========================================= */
+/* خلفية الشاشة */
+.dialog-pane {
+    -fx-background-color: #f8fafc; /* لون أبيض مكسور (نظيف جداً ومريح للعين) */
+}
+
+/* ستايل حقول الإدخال (النصوص والقوائم) */
+.dialog-input, .dialog-combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-text-fill: #334155;
+    -fx-font-family: "Segoe UI";
+}
+
+/* لما تضغط على الحقل عشان تكتب فيه (Focus) */
+.dialog-input:focused, .dialog-combo-box:focused {
+    -fx-border-color: #3b82f6; /* إطار أزرق فخم */
+    -fx-border-width: 2;
+    -fx-background-color: #ffffff;
+}
+
+/* الحقل المغلق (رقم الزبون اللي ما بتعدل) */
+.dialog-input:disabled {
+    -fx-opacity: 1; /* عشان ما يبهت ويختفي */
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #475569;
+    -fx-font-weight: bold;
+    -fx-border-color: transparent;
+}
+
+/* 🟢 زر الحفظ (Save) */
+.btn-save {
+    -fx-background-color: #22c55e; /* أخضر */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+.btn-save:hover { -fx-background-color: #16a34a; }
+.btn-save:pressed { -fx-background-color: #15803d; }
+
+/* 🔴 زر الإلغاء (Cancel) */
+.btn-cancel {
+    -fx-background-color: #ef4444; /* أحمر */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+.btn-cancel:hover { -fx-background-color: #dc2626; }
+.btn-cancel:pressed { -fx-background-color: #b91c1c; }
+
+/* =========================================
+   6. TECHNICIAN DASHBOARD (شاشة الفني)
+   ========================================= */
+/* ستايل الـ SplitPane الأساسي (شفاف عشان يبين الصورة) */
+.tech-pane {
+    -fx-background-color: transparent; /* خلفية شفافة */
+}
+
+/* ألواح الـ SplitPane نفسها (اليسار واليمين) نخليها شبه شفافة وزجاجية */
+.tech-pane > .split-pane-divider {
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* فاصل شبه شفاف */
+}
+
+.tech-pane .anchor-pane { /* بافتراض إنه الأجزاء هي AnchorPane */
+    -fx-background-color: rgba(255, 255, 255, 0.2); /* زجاجي شفاف */
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.1); /* إطار خفيف */
+    -fx-border-radius: 10;
+    -fx-padding: 10;
+}
+
+/* ستايل القائمة (ListView) */
+.tech-list-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 5;
+}
+.tech-list-view .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #334155;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12;
+    -fx-border-color: transparent transparent #f1f5f9 transparent; /* خط خفيف تحت كل جهاز */
+    -fx-border-width: 1;
+}
+.tech-list-view .list-cell:selected {
+    -fx-background-color: #e0f2fe; /* أزرق فاتح لما يحدد الجهاز */
+    -fx-text-fill: #0369a1;
+    -fx-background-radius: 5;
+}
+
+/* ستايل مربع وصف المشكلة (عشان يبين إنه للقراءة فقط) */
+.tech-text-area {
+    -fx-control-inner-background: #f1f5f9;
+    -fx-background-color: transparent;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 8;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-text-fill: #475569;
+}
+
+/* زر البدء بالصيانة (Start Repair) */
+.btn-start {
+    -fx-background-color: #f59e0b; /* برتقالي فخم */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+.btn-start:hover { -fx-background-color: #d97706; }
+.btn-start:disabled { -fx-background-color: #fcd34d; -fx-text-fill: #fffbeb; -fx-cursor: default; }
+
+/* زر إنهاء الصيانة (Finish) */
+.btn-finish {
+    -fx-background-color: #3b82f6; /* أزرق */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 8;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+.btn-finish:hover { -fx-background-color: #2563eb; }
+.btn-finish:disabled { -fx-background-color: #93c5fd; -fx-text-fill: #eff6ff; -fx-cursor: default; }
