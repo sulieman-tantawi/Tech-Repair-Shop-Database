@@ -20,7 +20,6 @@ public class DevicePopupController {
     @FXML private Label lblAccessories;
 
     public void loadDeviceDataFromDB(int deviceId) {
-        // ضفنا D.Accessories للكويري
         String query = "SELECT B.BrandName, D.Model, D.SerialNo, D.Color, D.Accessories, D.DevicePIN " +
                        "FROM Device D " +
                        "JOIN Brand B ON D.BrandID = B.BrandID " +
@@ -43,16 +42,13 @@ public class DevicePopupController {
                     lblPassword.setText(pin); 
                 }
                 
-                // سحب البيانات
                 String color = rs.getString("Color");
                 String acc = rs.getString("Accessories");
 
-                // كسر القيود تبعت التصميم عشان يتمدد براحته
                 lblAccessories.setWrapText(true);
                 lblAccessories.setMinHeight(javafx.scene.layout.Region.USE_PREF_SIZE);
                 lblAccessories.setPrefHeight(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
 
-                // الطباعة
                 lblAccessories.setText("Color: " + color + "\nItems: " + acc);
             }
             

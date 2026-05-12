@@ -75,7 +75,6 @@ public class DeviceDialogController {
         String colorValue = colorField.getText() != null ? colorField.getText().trim() : "Unknown";
         String serialValue = serialNumberField.getText() != null ? serialNumberField.getText().trim() : "";
         
-        // جلب الإكسسوارات
         String accValue = accessoriesField.getText() != null && !accessoriesField.getText().trim().isEmpty() ? accessoriesField.getText().trim() : "None";
         
         String pinValue = txtDevicePin.getText() != null ? txtDevicePin.getText().trim() : "";

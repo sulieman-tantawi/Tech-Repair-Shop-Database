@@ -53,7 +53,7 @@ public class TechDashboardController {
 
         String query = "SELECT J.JobID, D.DeviceID, C.FullName, Ci.CityName, C.Phone, " +
                "CONCAT(B.BrandName, ' ', D.Model) AS DeviceName, " +
-               "D.DevicePIN, " + // <--- ضفناها هون
+               "D.DevicePIN, " + 
                "S.StatusName, J.ProblemDescription " +
                "FROM Maintenance_Job J " +
                "JOIN Device D ON J.DeviceID = D.DeviceID " +

@@ -67,15 +67,9 @@ public class ReceptionDashboardController {
         idColumn.setReorderable(false);
         nameColumn.setReorderable(false);
         devicesColumn.setReorderable(false);
-
-        // ==========================================
-        // 🔥 الكود السحري للـ Live Search (البحث التفاعلي) 🔥
-        // ==========================================
         
-        // 1. تغليف القائمة الأصلية بـ FilteredList
         FilteredList<CustomerRow> filteredData = new FilteredList<>(customerList, b -> true);
 
-        // 2. مراقبة حقل البحث وحقل المدينة وتحديث الفلتر فوراً
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             updateFilter(filteredData);
         });
@@ -84,30 +78,25 @@ public class ReceptionDashboardController {
             updateFilter(filteredData);
         });
 
-        // 3. تغليف الـ FilteredList بـ SortedList للحفاظ على ترتيب الأعمدة
         SortedList<CustomerRow> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(customerTable.comparatorProperty());
 
-        // 4. وضع القائمة المفلترة والمرتبة في الجدول
         customerTable.setItems(sortedData);
     }
 
-    // ميثود مساعد لتحديث الفلتر بناءً على النص المكتوب والمدينة المختارة
     private void updateFilter(FilteredList<CustomerRow> filteredData) {
         filteredData.setPredicate(customer -> {
             String searchText = searchField.getText() == null ? "" : searchField.getText().toLowerCase();
             String selectedCity = filterCityComboBox.getValue();
 
-            // الفلترة حسب الاسم أو رقم الجوال
             boolean matchesSearch = searchText.isEmpty() 
                     || customer.getFullName().toLowerCase().contains(searchText)
                     || customer.getPhone().toLowerCase().contains(searchText);
 
-            // الفلترة حسب المدينة
             boolean matchesCity = selectedCity == null || selectedCity.equals("All") 
                     || customer.getCity().equalsIgnoreCase(selectedCity);
 
-            return matchesSearch && matchesCity; // لازم يطابق الشرطين عشان ينعرض
+            return matchesSearch && matchesCity;
         });
     }
 
@@ -166,7 +155,6 @@ public class ReceptionDashboardController {
                         rs.getString("Devices")
                 ));
             }
-            // ما بنحط setItems هون لأننا ربطناها بالـ sortedData في الـ initialize
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
         }
@@ -323,7 +311,6 @@ public class ReceptionDashboardController {
         filterCityComboBox.setValue("All");
         selectedCustomerId = 0;
         customerTable.getSelectionModel().clearSelection();
-        // شلنا الـ setItems من هون لأنها انربطت تلقائياً
     }
     
     @FXML
