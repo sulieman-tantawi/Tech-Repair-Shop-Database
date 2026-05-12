@@ -3,6 +3,8 @@ package com.techfix.controller;
 import com.techfix.util.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -48,7 +50,6 @@ public class ReceptionDashboardController {
         devicesColumn.setCellValueFactory(new PropertyValueFactory<>("devices"));
 
         loadCitiesToComboBoxes();
-        
         loadCustomerData();
 
         customerTable.setOnMouseClicked(event -> {
@@ -58,11 +59,7 @@ public class ReceptionDashboardController {
             }
         });
         
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> handleSearch());
-        filterCityComboBox.valueProperty().addListener((observable, oldValue, newValue) -> handleSearch());
-        
         customerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         idColumn.setMaxWidth(1f * Integer.MAX_VALUE * 10); 
         nameColumn.setMaxWidth(1f * Integer.MAX_VALUE * 30); 
         devicesColumn.setMaxWidth(1f * Integer.MAX_VALUE * 60);
@@ -70,6 +67,48 @@ public class ReceptionDashboardController {
         idColumn.setReorderable(false);
         nameColumn.setReorderable(false);
         devicesColumn.setReorderable(false);
+
+        // ==========================================
+        // 🔥 الكود السحري للـ Live Search (البحث التفاعلي) 🔥
+        // ==========================================
+        
+        // 1. تغليف القائمة الأصلية بـ FilteredList
+        FilteredList<CustomerRow> filteredData = new FilteredList<>(customerList, b -> true);
+
+        // 2. مراقبة حقل البحث وحقل المدينة وتحديث الفلتر فوراً
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            updateFilter(filteredData);
+        });
+
+        filterCityComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            updateFilter(filteredData);
+        });
+
+        // 3. تغليف الـ FilteredList بـ SortedList للحفاظ على ترتيب الأعمدة
+        SortedList<CustomerRow> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(customerTable.comparatorProperty());
+
+        // 4. وضع القائمة المفلترة والمرتبة في الجدول
+        customerTable.setItems(sortedData);
+    }
+
+    // ميثود مساعد لتحديث الفلتر بناءً على النص المكتوب والمدينة المختارة
+    private void updateFilter(FilteredList<CustomerRow> filteredData) {
+        filteredData.setPredicate(customer -> {
+            String searchText = searchField.getText() == null ? "" : searchField.getText().toLowerCase();
+            String selectedCity = filterCityComboBox.getValue();
+
+            // الفلترة حسب الاسم أو رقم الجوال
+            boolean matchesSearch = searchText.isEmpty() 
+                    || customer.getFullName().toLowerCase().contains(searchText)
+                    || customer.getPhone().toLowerCase().contains(searchText);
+
+            // الفلترة حسب المدينة
+            boolean matchesCity = selectedCity == null || selectedCity.equals("All") 
+                    || customer.getCity().equalsIgnoreCase(selectedCity);
+
+            return matchesSearch && matchesCity; // لازم يطابق الشرطين عشان ينعرض
+        });
     }
 
     private void loadCitiesToComboBoxes() {
@@ -109,6 +148,7 @@ public class ReceptionDashboardController {
                        "LEFT JOIN Device d ON c.CustomerID = d.CustomerID " +
                        "LEFT JOIN Brand b ON d.BrandID = b.BrandID " +
                        "LEFT JOIN Device_Type dt ON d.TypeID = dt.TypeID " +
+                       "WHERE c.IsActive = TRUE " +
                        "GROUP BY c.CustomerID";
 
         try (Connection conn = DBConnection.getConnection();
@@ -126,7 +166,7 @@ public class ReceptionDashboardController {
                         rs.getString("Devices")
                 ));
             }
-            customerTable.setItems(customerList);
+            // ما بنحط setItems هون لأننا ربطناها بالـ sortedData في الـ initialize
         } catch (Exception e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
         }
@@ -218,17 +258,17 @@ public class ReceptionDashboardController {
             return;
         }
 
-        String query = "DELETE FROM Customer WHERE CustomerID=?";
+        String query = "UPDATE Customer SET IsActive = FALSE WHERE CustomerID=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, selectedCustomerId);
             if (stmt.executeUpdate() > 0) {
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Customer deleted successfully!");
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Customer removed successfully!");
                 clearCustomerFields();
-                loadCustomerData();
+                loadCustomerData(); 
             }
         } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete customer. Please remove their devices first.");
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
     }
 
@@ -260,27 +300,6 @@ public class ReceptionDashboardController {
     }
 
     @FXML
-    private void handleSearch() {
-        String searchText = searchField.getText().trim().toLowerCase();
-        String selectedCity = filterCityComboBox.getValue();
-
-        ObservableList<CustomerRow> filteredList = FXCollections.observableArrayList();
-        for (CustomerRow customer : customerList) {
-            boolean matchesSearch = searchText.isEmpty()
-                    || customer.getFullName().toLowerCase().contains(searchText)
-                    || customer.getPhone().toLowerCase().contains(searchText);
-
-            boolean matchesCity = selectedCity == null || selectedCity.equals("All")
-                    || customer.getCity().equalsIgnoreCase(selectedCity);
-
-            if (matchesSearch && matchesCity) {
-                filteredList.add(customer);
-            }
-        }
-        customerTable.setItems(filteredList);
-    }
-
-    @FXML
     private void handleClear() {
         clearCustomerFields();
     }
@@ -304,7 +323,51 @@ public class ReceptionDashboardController {
         filterCityComboBox.setValue("All");
         selectedCustomerId = 0;
         customerTable.getSelectionModel().clearSelection();
-        customerTable.setItems(customerList);
+        // شلنا الـ setItems من هون لأنها انربطت تلقائياً
+    }
+    
+    @FXML
+    private void handleCreateJob() {
+        if (selectedCustomerId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select a customer from the table first.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/CreateJobDialog.fxml"));
+            Parent root = loader.load();
+
+            CreateJobController controller = loader.getController();
+            controller.initData(selectedCustomerId, firstNameField.getText() + " " + lastNameField.getText());
+
+            Stage stage = new Stage();
+            stage.setTitle("Create Repair Ticket");
+            stage.setScene(new Scene(root));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not open Create Job window.");
+        }
+    }
+    
+    @FXML
+    private void handleOpenCheckout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Checkout.fxml"));
+            javafx.scene.Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Checkout & Delivery");
+            stage.setScene(new Scene(root));
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not open Checkout window.");
+        }
     }
 
     private void showAlert(Alert.AlertType type, String title, String message) {

@@ -16,7 +16,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.text.Text;
+import java.io.File;
+import java.io.PrintWriter;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class AdminController implements Initializable {
 
@@ -44,9 +52,29 @@ public class AdminController implements Initializable {
     @FXML private TabPane mainTabPane;
     @FXML private Tab dashboardTab;
     @FXML private Tab reportsTab;
+    
+    @FXML private PieChart statusPieChart;
+    @FXML private BarChart<String, Number> revenueBarChart;
+    @FXML private LineChart<String, Number> revenueLineChart;
+    @FXML private PieChart brandPieChart;
+    
+    @FXML private TextField invNameField;
+    @FXML private ComboBox<String> invTypeComboBox;
+    @FXML private TextField invPriceField;
+    @FXML private TextField invStockField;
+    @FXML private TextField invSearchField;
+
+    @FXML private TableView<InventoryItem> inventoryTable;
+    @FXML private TableColumn<InventoryItem, Integer> colInvId;
+    @FXML private TableColumn<InventoryItem, String> colInvName;
+    @FXML private TableColumn<InventoryItem, String> colInvType;
+    @FXML private TableColumn<InventoryItem, Double> colInvPrice;
+    @FXML private TableColumn<InventoryItem, Integer> colInvStock;
+    @FXML private TableColumn<InventoryItem, String> colInvSuppliers;
 
     private ObservableList<User> userList = FXCollections.observableArrayList();
     private int selectedUserId = 0;
+    private int selectedInvId = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -115,9 +143,60 @@ public class AdminController implements Initializable {
             };
             return cell;
         });
+        
+        invTypeComboBox.getItems().addAll("Part", "Service");
+
+        colInvId.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("id"));
+        colInvName.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("name"));
+        colInvType.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("type"));
+        colInvPrice.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("price"));
+        colInvStock.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("stock"));
+        colInvSuppliers.setCellValueFactory(new PropertyValueFactory<>("suppliers"));
+        
+        colInvSuppliers.setCellFactory(column -> {
+            return new TableCell<InventoryItem, String>() {
+                private javafx.scene.text.Text text = new javafx.scene.text.Text();
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        text.setText(item);
+                        text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                        setGraphic(text);
+                    }
+                }
+            };
+        });
+        
+        colInvName.setCellFactory(column -> {
+            return new TableCell<InventoryItem, String>() {
+                private javafx.scene.text.Text text = new javafx.scene.text.Text();
+
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty || item == null) {
+                        setGraphic(null);
+                        setText(null);
+                    } else {
+                        text.setText(item);
+                        text.wrappingWidthProperty().bind(column.widthProperty().subtract(10));
+                        text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER); 
+                        setGraphic(text);
+                        setAlignment(javafx.geometry.Pos.CENTER); 
+                    }
+                }
+            };
+        });
 
         loadUserData();
+        loadSystemReports();
         loadDashboardStats();
+        loadInventoryData();
 
         employeeTable.setOnMouseClicked(event -> {
             User selectedUser = employeeTable.getSelectionModel().getSelectedItem();
@@ -128,6 +207,33 @@ public class AdminController implements Initializable {
 
         searchField.textProperty().addListener((observable, oldValue, newValue) -> updateTableData());
         filterComboBox.valueProperty().addListener((observable, oldValue, newValue) -> updateTableData());
+        
+        inventoryTable.setOnMouseClicked(event -> {
+            InventoryItem selected = inventoryTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                selectedInvId = selected.getId();
+                invNameField.setText(selected.getName());
+                invTypeComboBox.setValue(selected.getType());
+                invPriceField.setText(String.valueOf(selected.getPrice()));
+                
+                if (selected.getType().equals("Part")) {
+                    invStockField.setText(String.valueOf(selected.getStock()));
+                    invStockField.setDisable(false);
+                } else {
+                    invStockField.setText("0");
+                    invStockField.setDisable(true);
+                }
+            }
+        });
+
+        invTypeComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if ("Service".equals(newVal)) {
+                invStockField.setText("0");
+                invStockField.setDisable(true);
+            } else {
+                invStockField.setDisable(false);
+            }
+        });
     }
 
 
@@ -355,7 +461,6 @@ public class AdminController implements Initializable {
         employeeTable.getSelectionModel().clearSelection();
     }
     
-    //SHA-256
     private String hashPassword(String password) {
         try {
             java.security.MessageDigest digest = java.security.MessageDigest.getInstance("SHA-256");
@@ -461,5 +566,285 @@ public class AdminController implements Initializable {
             mainTabPane.getTabs().remove(dashboardTab);
             mainTabPane.getTabs().remove(reportsTab);
         }
+    }
+    
+    public void loadSystemReports() {
+        loadStatusPieChart();
+        loadRevenueBarChart();
+        loadRevenueLineChart();
+        loadBrandPieChart();
+    }
+    
+    @FXML
+    private void handleInvAdd() {
+        String name = invNameField.getText().trim();
+        String type = invTypeComboBox.getValue();
+        String priceStr = invPriceField.getText().trim();
+        String stockStr = invStockField.getText().trim();
+
+        if (name.isEmpty() || type == null || priceStr.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Missing Data", "Please fill all fields.");
+            return;
+        }
+
+        try (Connection conn = DBConnection.getConnection()) {
+            double price = Double.parseDouble(priceStr);
+            int stock = stockStr.isEmpty() ? 0 : Integer.parseInt(stockStr);
+
+            String insertItem = "INSERT INTO item (Name, Price) VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertItem, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, name);
+                stmt.setDouble(2, price);
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int newItemId = rs.getInt(1);
+
+                    if (type.equals("Part")) {
+                        String insertPart = "INSERT INTO part (ItemID, StockQuantity) VALUES (?, ?)";
+                        try (PreparedStatement pst = conn.prepareStatement(insertPart)) {
+                            pst.setInt(1, newItemId);
+                            pst.setInt(2, stock);
+                            pst.executeUpdate();
+                        }
+                    } else {
+                        String insertService = "INSERT INTO service (ItemID) VALUES (?)";
+                        try (PreparedStatement pst = conn.prepareStatement(insertService)) {
+                            pst.setInt(1, newItemId);
+                            pst.executeUpdate();
+                        }
+                    }
+                }
+            }
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Item added successfully!");
+            clearInvForm();
+            loadInventoryData();
+
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Price and Stock must be valid numbers!");
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Database Error", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleInvUpdate() {
+        if (selectedInvId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an item from the table first.");
+            return;
+        }
+
+        String name = invNameField.getText().trim();
+        String type = invTypeComboBox.getValue();
+        String priceStr = invPriceField.getText().trim();
+        String stockStr = invStockField.getText().trim();
+
+        try (Connection conn = DBConnection.getConnection()) {
+            double price = Double.parseDouble(priceStr);
+            int stock = stockStr.isEmpty() ? 0 : Integer.parseInt(stockStr);
+
+            String updateItem = "UPDATE item SET Name=?, Price=? WHERE ItemID=?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateItem)) {
+                stmt.setString(1, name);
+                stmt.setDouble(2, price);
+                stmt.setInt(3, selectedInvId);
+                stmt.executeUpdate();
+            }
+
+            if (type.equals("Part")) {
+                String updatePart = "UPDATE part SET StockQuantity=? WHERE ItemID=?";
+                try (PreparedStatement pst = conn.prepareStatement(updatePart)) {
+                    pst.setInt(1, stock);
+                    pst.setInt(2, selectedInvId);
+                    pst.executeUpdate();
+                }
+            }
+            
+            showAlert(Alert.AlertType.INFORMATION, "Success", "Item updated successfully!");
+            clearInvForm();
+            loadInventoryData();
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleInvDelete() {
+        if (selectedInvId == 0) {
+            showAlert(Alert.AlertType.WARNING, "No Selection", "Please select an item to delete.");
+            return;
+        }
+
+        String query = "DELETE FROM item WHERE ItemID=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setInt(1, selectedInvId);
+            if (stmt.executeUpdate() > 0) {
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Item deleted successfully!");
+                clearInvForm();
+                loadInventoryData();
+            }
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Error", "Cannot delete item. It might be linked to existing jobs.");
+        }
+    }
+    
+    @FXML
+    private void handleExportInventory() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Inventory Report");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files (*.csv)", "*.csv"));
+        fileChooser.setInitialFileName("Inventory_Report_" + java.time.LocalDate.now() + ".csv");
+        
+        Stage stage = (Stage) inventoryTable.getScene().getWindow();
+        File file = fileChooser.showSaveDialog(stage);
+
+        if (file != null) {
+            try (PrintWriter writer = new PrintWriter(file, "UTF-8")) {
+                writer.println("ID,Item Name,Type,Price ($),Stock,Suppliers");
+
+                for (InventoryItem item : inventoryTable.getItems()) {
+                    writer.println(
+                        item.getId() + "," + 
+                        "\"" + item.getName() + "\"," +
+                        item.getType() + "," + 
+                        item.getPrice() + "," + 
+                        item.getStock() + "," +
+                        "\"" + item.getSuppliers() + "\"" 
+                    );
+                }
+                
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Export Success");
+                alert.setHeaderText(null);
+                alert.setContentText("Inventory data exported successfully to:\n" + file.getAbsolutePath());
+                alert.showAndWait();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Export Error");
+                alert.setContentText("Could not export data: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }
+    }
+
+    @FXML
+    private void clearInvForm() {
+        invNameField.clear();
+        invPriceField.clear();
+        invStockField.clear();
+        invTypeComboBox.getSelectionModel().clearSelection();
+        invStockField.setDisable(false);
+        selectedInvId = 0;
+        inventoryTable.getSelectionModel().clearSelection();
+    }
+
+    private void loadStatusPieChart() {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        String query = "SELECT s.StatusName, COUNT(m.JobID) AS TotalCount FROM maintenance_job m JOIN status s ON m.StatusID = s.StatusID GROUP BY s.StatusName";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                pieChartData.add(new PieChart.Data(rs.getString("StatusName") + " (" + rs.getInt("TotalCount") + ")", rs.getInt("TotalCount")));
+            }
+            statusPieChart.setData(pieChartData);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void loadRevenueBarChart() {
+        revenueBarChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Income");
+        String query = "SELECT Method, SUM(Amount) AS TotalRevenue FROM payment GROUP BY Method";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                series.getData().add(new XYChart.Data<>(rs.getString("Method"), rs.getDouble("TotalRevenue")));
+            }
+            revenueBarChart.getData().add(series);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void loadRevenueLineChart() {
+        revenueLineChart.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName("Daily Revenue");
+        String query = "SELECT PaymentDate, SUM(Amount) AS DailyTotal FROM payment GROUP BY PaymentDate ORDER BY PaymentDate ASC LIMIT 7";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                series.getData().add(new XYChart.Data<>(rs.getString("PaymentDate"), rs.getDouble("DailyTotal")));
+            }
+            revenueLineChart.getData().add(series);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void loadBrandPieChart() {
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+        String query = "SELECT b.BrandName, COUNT(m.JobID) AS BrandCount FROM maintenance_job m " +
+                       "JOIN device d ON m.DeviceID = d.DeviceID JOIN brand b ON d.BrandID = b.BrandID GROUP BY b.BrandName";
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                pieChartData.add(new PieChart.Data(rs.getString("BrandName"), rs.getInt("BrandCount")));
+            }
+            brandPieChart.setData(pieChartData);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+    
+    private void loadInventoryData() {
+        ObservableList<InventoryItem> invList = FXCollections.observableArrayList();
+        
+        String query = "SELECT i.ItemID, i.Name, i.Price, " +
+                       "CASE WHEN p.ItemID IS NOT NULL THEN 'Part' ELSE 'Service' END AS ItemType, " +
+                       "IFNULL(p.StockQuantity, 0) AS Stock, " +
+                       "IFNULL(GROUP_CONCAT(s.SupplierName SEPARATOR ', '), 'No Supplier') AS Suppliers " +
+                       "FROM item i " +
+                       "LEFT JOIN part p ON i.ItemID = p.ItemID " +
+                       "LEFT JOIN supplier_part sp ON p.ItemID = sp.ItemID " +
+                       "LEFT JOIN supplier s ON sp.SupplierID = s.SupplierID " +
+                       "GROUP BY i.ItemID, i.Name, i.Price, ItemType, Stock";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                invList.add(new InventoryItem(
+                    rs.getInt("ItemID"),
+                    rs.getString("Name"),
+                    rs.getString("ItemType"),
+                    rs.getDouble("Price"),
+                    rs.getInt("Stock"),
+                    rs.getString("Suppliers")
+                ));
+            }
+            inventoryTable.setItems(invList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static class InventoryItem {
+        private int id;
+        private String name;
+        private String type;
+        private double price;
+        private int stock;
+        private String suppliers; 
+
+        public InventoryItem(int id, String name, String type, double price, int stock, String suppliers) {
+            this.id = id; this.name = name; this.type = type; 
+            this.price = price; this.stock = stock; this.suppliers = suppliers;
+        }
+
+        public int getId() { return id; }
+        public String getName() { return name; }
+        public String getType() { return type; }
+        public double getPrice() { return price; }
+        public int getStock() { return stock; }
+        public String getSuppliers() { return suppliers; }
     }
 }

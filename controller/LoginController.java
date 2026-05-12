@@ -12,6 +12,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -79,7 +81,7 @@ public class LoginController {
 
         String hashedPassword = hashPassword(pass);
 
-        String query = "SELECT RoleID, FullName FROM `User` WHERE Username = ? AND Password = ? AND IsActive = true";
+        String query = "SELECT UserID, RoleID, FullName FROM `User` WHERE Username = ? AND Password = ? AND IsActive = true";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -90,6 +92,7 @@ public class LoginController {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int loggedUserId = rs.getInt("UserID");
                 int roleId = rs.getInt("RoleID");
                 String fullName = rs.getString("FullName");
 
@@ -114,6 +117,7 @@ public class LoginController {
                             adminStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         } catch (Exception e) { }
 
+                        setupCloseRequest(adminStage);
                         adminStage.show();
 
                         Platform.runLater(() -> {
@@ -148,6 +152,7 @@ public class LoginController {
                             receptionStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         } catch (Exception e) { }
 
+                        setupCloseRequest(receptionStage);
                         receptionStage.show();
                         
                         Platform.runLater(() -> {
@@ -164,12 +169,13 @@ public class LoginController {
                         showAlert(Alert.AlertType.ERROR, "System Error", "Cannot load Reception Dashboard: " + e.getMessage());
                     }
                 } 
-                // 👈 التعديل هون: فتحنا الباب للفني (Sami Yousef)
                 else if (roleId == 2) {
                     try {
-                        // ملاحظة: تأكد إن ملف TechDashboard.fxml موجود جوا مجلد fxml
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TechDashboard.fxml"));
                         Parent root = loader.load();
+                        
+                        TechDashboardController techController = loader.getController();
+                        techController.setLoggedInTechnician(loggedUserId);
                         
                         Stage currentStage = (Stage) usernameField.getScene().getWindow();
                         currentStage.close();
@@ -184,6 +190,7 @@ public class LoginController {
                             techStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
                         } catch (Exception e) { }
 
+                        setupCloseRequest(techStage);
                         techStage.show();
                         
                         Platform.runLater(() -> {
@@ -225,5 +232,53 @@ public class LoginController {
         } catch (Exception e) {  }
 
         alert.showAndWait();
+    } 
+    
+    private void setupCloseRequest(Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Exit / Logout");
+            alert.setHeaderText("What would you like to do?");
+            
+            try {
+                Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+                alertStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+            } catch (Exception e) { }
+
+            ButtonType btnLogout = new ButtonType("Logout");
+            ButtonType btnExit = new ButtonType("Exit");
+            ButtonType btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+            alert.getButtonTypes().setAll(btnLogout, btnExit, btnCancel);
+
+            alert.showAndWait().ifPresent(type -> {
+                if (type == btnLogout) {
+                    stage.close(); 
+                    showLoginScreen(); 
+                } else if (type == btnExit) {
+                    Platform.exit(); 
+                    System.exit(0); 
+                }
+            });
+        });
+    }
+
+    private void showLoginScreen() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml")); 
+            Parent root = loader.load();
+            Stage loginStage = new Stage();
+            loginStage.setTitle("TechFix - Login");
+            loginStage.setScene(new Scene(root));
+            loginStage.setResizable(false);
+            try {
+                loginStage.getIcons().add(new Image(getClass().getResourceAsStream("/images/logo.png")));
+            } catch (Exception e) { }
+            loginStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

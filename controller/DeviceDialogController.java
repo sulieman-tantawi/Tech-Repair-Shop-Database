@@ -23,6 +23,9 @@ public class DeviceDialogController {
     @FXML private TextField modelField;
     @FXML private TextField colorField;
     @FXML private TextField serialNumberField;
+    @FXML private TextField accessoriesField;
+    @FXML private TextField txtDevicePin;
+    
 
     private int currentCustomerId;
 
@@ -71,14 +74,19 @@ public class DeviceDialogController {
         String modelValue = modelField.getText() != null ? modelField.getText().trim() : "";
         String colorValue = colorField.getText() != null ? colorField.getText().trim() : "Unknown";
         String serialValue = serialNumberField.getText() != null ? serialNumberField.getText().trim() : "";
+        
+        // جلب الإكسسوارات
+        String accValue = accessoriesField.getText() != null && !accessoriesField.getText().trim().isEmpty() ? accessoriesField.getText().trim() : "None";
+        
+        String pinValue = txtDevicePin.getText() != null ? txtDevicePin.getText().trim() : "";
 
         if (brandValue == null || typeValue == null || modelValue.isEmpty() || serialValue.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Missing Data", "Please fill all required device fields.");
             return;
         }
 
-        String query = "INSERT INTO Device (CustomerID, SerialNo, Model, Color, BrandID, TypeID) " +
-                       "VALUES (?, ?, ?, ?, (SELECT BrandID FROM Brand WHERE BrandName = ?), (SELECT TypeID FROM Device_Type WHERE TypeName = ?))";
+        String query = "INSERT INTO Device (CustomerID, SerialNo, Model, Color, Accessories, DevicePIN, BrandID, TypeID) " +
+                       "VALUES (?, ?, ?, ?, ?, ?, (SELECT BrandID FROM Brand WHERE BrandName = ?), (SELECT TypeID FROM Device_Type WHERE TypeName = ?))";
         
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -87,8 +95,10 @@ public class DeviceDialogController {
             stmt.setString(2, serialValue);     
             stmt.setString(3, modelValue);      
             stmt.setString(4, colorValue);      
-            stmt.setString(5, brandValue);      
-            stmt.setString(6, typeValue);      
+            stmt.setString(5, accValue);        
+            stmt.setString(6, pinValue);        
+            stmt.setString(7, brandValue);      
+            stmt.setString(8, typeValue);       
 
             if (stmt.executeUpdate() > 0) {
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Device added to customer successfully!");
