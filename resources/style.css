@@ -96,8 +96,8 @@
     -fx-background: transparent !important;
     -fx-control-inner-background: transparent !important;
     -fx-border-color: transparent !important;
-    -fx-border-width: 0 !important; /* نسف الحواف الخارجية */
-    -fx-background-insets: 0 !important; /* إزالة أي تباعد للإطار */
+    -fx-border-width: 0 !important;
+    -fx-background-insets: 0 !important;
     -fx-padding: 0;
 }
 .glass-table .column-header-background {
@@ -112,7 +112,7 @@
     -fx-text-fill: #1e293b;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
-    -fx-alignment: center; /* 👈 توسيط أسماء الأعمدة */
+    -fx-alignment: center;
 }
 .glass-table .table-row-cell {
     -fx-background-color: rgba(255, 255, 255, 0.2); 
@@ -124,30 +124,23 @@
 .glass-table .table-row-cell:hover { -fx-background-color: rgba(255, 255, 255, 0.4); }
 .glass-table .table-row-cell:selected { -fx-background-color: rgba(59, 130, 246, 0.6); }
 .glass-table .table-row-cell:empty { -fx-background-color: transparent !important; -fx-border-width: 0 !important; }
-.glass-table .table-cell { -fx-alignment: center; } /* تأكيد توسيط الداتا كمان */
-/* 🔥 تظبيط لون الخط جوا الجدول الزجاجي 🔥 */
+.glass-table .table-cell { -fx-alignment: center; }
 .glass-table .table-cell { 
     -fx-alignment: center; 
-    -fx-text-fill: #1e293b; /* لون كحلي غامق فخم وواضح جداً للعين */
+    -fx-text-fill: #1e293b;
     -fx-font-size: 14px;
-    -fx-font-weight: bold; /* خليناه عريض شوي عشان يبرز عن الزجاج */
+    -fx-font-weight: bold;
 } 
-
-/* لما تحدد السطر (يصير أزرق)، الخط لازم يقلب أبيض عشان يضل مقروء */
 .glass-table .table-row-cell:selected .table-cell {
     -fx-text-fill: white;
 }
 
-
 /* =========================================
    5. DIALOG & POPUP STYLES (شاشات الإضافة المنبثقة)
    ========================================= */
-/* خلفية الشاشة */
 .dialog-pane {
-    -fx-background-color: #f8fafc; /* لون أبيض مكسور (نظيف جداً ومريح للعين) */
+    -fx-background-color: #f8fafc;
 }
-
-/* ستايل حقول الإدخال (النصوص والقوائم) */
 .dialog-input, .dialog-combo-box {
     -fx-background-color: white;
     -fx-border-color: #cbd5e1;
@@ -158,26 +151,20 @@
     -fx-text-fill: #334155;
     -fx-font-family: "Segoe UI";
 }
-
-/* لما تضغط على الحقل عشان تكتب فيه (Focus) */
 .dialog-input:focused, .dialog-combo-box:focused {
-    -fx-border-color: #3b82f6; /* إطار أزرق فخم */
+    -fx-border-color: #3b82f6;
     -fx-border-width: 2;
     -fx-background-color: #ffffff;
 }
-
-/* الحقل المغلق (رقم الزبون اللي ما بتعدل) */
 .dialog-input:disabled {
-    -fx-opacity: 1; /* عشان ما يبهت ويختفي */
+    -fx-opacity: 1;
     -fx-background-color: #e2e8f0;
     -fx-text-fill: #475569;
     -fx-font-weight: bold;
     -fx-border-color: transparent;
 }
-
-/* 🟢 زر الحفظ (Save) */
 .btn-save {
-    -fx-background-color: #22c55e; /* أخضر */
+    -fx-background-color: #22c55e;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
@@ -187,10 +174,8 @@
 }
 .btn-save:hover { -fx-background-color: #16a34a; }
 .btn-save:pressed { -fx-background-color: #15803d; }
-
-/* 🔴 زر الإلغاء (Cancel) */
 .btn-cancel {
-    -fx-background-color: #ef4444; /* أحمر */
+    -fx-background-color: #ef4444;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 15px;
@@ -202,82 +187,133 @@
 .btn-cancel:pressed { -fx-background-color: #b91c1c; }
 
 /* =========================================
-   6. TECHNICIAN DASHBOARD (شاشة الفني)
+   6. TECHNICIAN DASHBOARD (شاشة الفني - Frosted Light Glass Edition)
    ========================================= */
-/* ستايل الـ SplitPane الأساسي (شفاف عشان يبين الصورة) */
-.tech-pane {
-    -fx-background-color: transparent; /* خلفية شفافة */
-}
 
-/* ألواح الـ SplitPane نفسها (اليسار واليمين) نخليها شبه شفافة وزجاجية */
-.tech-pane > .split-pane-divider {
-    -fx-background-color: rgba(255, 255, 255, 0.1); /* فاصل شبه شفاف */
-}
+.tech-root-pane { -fx-background-image: url('../images/bg_repair.jpg'); -fx-background-size: cover; -fx-background-position: center center; }
+.tech-pane { -fx-background-color: transparent; -fx-padding: 10; }
+.tech-pane > .split-pane-divider { -fx-background-color: rgba(255, 255, 255, 0.4); }
 
-.tech-pane .anchor-pane { /* بافتراض إنه الأجزاء هي AnchorPane */
-    -fx-background-color: rgba(255, 255, 255, 0.2); /* زجاجي شفاف */
+/* 👈 1. الزجاج المغبش (تقليل الشفافية لـ 85% أبيض عشان يعطي تأثير البلور ويبرز الأسود) */
+.tech-glass-vbox {
+    -fx-background-color: rgba(255, 255, 255, 0.85) !important; 
     -fx-background-radius: 10;
-    -fx-border-color: rgba(255, 255, 255, 0.1); /* إطار خفيف */
-    -fx-border-radius: 10;
-    -fx-padding: 10;
+    -fx-padding: 15;
 }
 
-/* ستايل القائمة (ListView) */
+/* 👈 2. العناوين باللون الأسود */
+.tech-section-title {
+    -fx-font-size: 20px !important;
+    -fx-font-weight: bold !important;
+    -fx-text-fill: #000000 !important; /* أسود صريح */
+    -fx-padding: 0 0 10 0 !important;
+}
+
+/* 👈 3. النصوص العادية (بيانات الزبون) باللون الأسود */
+.tech-info-label {
+    -fx-font-size: 16px !important;
+    -fx-font-weight: bold !important; /* بولد عشان توضح أكثر */
+    -fx-text-fill: #1e293b !important; /* أسود/كحلي داكن جداً مريح للعين */
+}
+
+/* 👈 4. مستطيل حالة الجهاز (الأحمر) - بناءً على طلبك */
+.status-badge {
+    -fx-background-color: rgba(239, 68, 68, 0.15) !important; 
+    -fx-border-color: #ef4444 !important; 
+    -fx-border-width: 1.5 !important;
+    -fx-border-radius: 6 !important;
+    -fx-background-radius: 6 !important;
+    -fx-text-fill: #dc2626 !important; /* أحمر قوي ومقروء */
+    -fx-font-weight: bold !important;
+    -fx-font-size: 14px !important;
+    -fx-padding: 4 10 !important;
+    -fx-alignment: center !important;
+}
+
+/* =========================================
+   القائمة (ListView) - ألوان فاتحة وخط أسود
+   ========================================= */
 .tech-list-view {
-    -fx-background-color: transparent;
-    -fx-border-color: #cbd5e1;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-    -fx-padding: 5;
+    -fx-background-color: transparent !important;
+    -fx-border-color: rgba(0, 0, 0, 0.15) !important; 
+    -fx-border-radius: 8 !important;
+    -fx-background-radius: 8 !important;
+    -fx-padding: 5 !important;
 }
+
+.tech-list-view .viewport, 
+.tech-list-view .virtual-flow { -fx-background-color: transparent !important; }
+
 .tech-list-view .list-cell {
-    -fx-background-color: white;
-    -fx-text-fill: #334155;
-    -fx-font-size: 15px;
-    -fx-font-weight: bold;
-    -fx-padding: 12;
-    -fx-border-color: transparent transparent #f1f5f9 transparent; /* خط خفيف تحت كل جهاز */
-    -fx-border-width: 1;
+    -fx-background-color: rgba(255, 255, 255, 0.6) !important; 
+    -fx-text-fill: #000000 !important; /* النص أسود */
+    -fx-font-family: "Segoe UI" !important;
+    -fx-font-size: 15px !important;
+    -fx-padding: 12 15 !important;
+    -fx-border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent !important; 
+    -fx-border-width: 1 !important;
 }
+
+.tech-list-view .list-cell:hover { -fx-background-color: rgba(255, 255, 255, 0.9) !important; -fx-cursor: hand !important; }
+
+/* لون الجهاز لما يتحدد (أزرق فاتح عشان الأسود يضل مقروء) */
 .tech-list-view .list-cell:selected {
-    -fx-background-color: #e0f2fe; /* أزرق فاتح لما يحدد الجهاز */
-    -fx-text-fill: #0369a1;
-    -fx-background-radius: 5;
+    -fx-background-color: rgba(59, 130, 246, 0.3) !important; 
+    -fx-text-fill: #000000 !important;
+    -fx-font-weight: bold !important; 
+    -fx-background-radius: 5 !important;
 }
 
-/* ستايل مربع وصف المشكلة (عشان يبين إنه للقراءة فقط) */
+.tech-list-view .list-cell:empty { -fx-background-color: transparent !important; -fx-border-width: 0 !important; }
+.tech-list-view .scroll-bar:horizontal { -fx-opacity: 0 !important; -fx-pref-height: 0 !important; }
+
+/* ========================================= */
+
+/* 👈 5. مربع وصف المشكلة (خلفية بيضا شفافة والنص أسود) */
 .tech-text-area {
-    -fx-control-inner-background: #f1f5f9;
-    -fx-background-color: transparent;
-    -fx-border-color: #cbd5e1;
-    -fx-border-radius: 8;
-    -fx-font-family: "Segoe UI";
-    -fx-font-size: 14px;
-    -fx-text-fill: #475569;
+    -fx-background-color: rgba(255, 255, 255, 0.7) !important; 
+    -fx-control-inner-background: transparent !important; 
+    -fx-border-color: rgba(0, 0, 0, 0.2) !important;
+    -fx-border-radius: 8 !important;
+    -fx-background-radius: 8 !important;
+    -fx-text-fill: #000000 !important; /* النص أسود */
+    -fx-font-size: 16px !important;
+}
+.tech-text-area .scroll-pane, .tech-text-area .scroll-pane .viewport, .tech-text-area .scroll-pane .content {
+    -fx-background-color: transparent !important; 
 }
 
-/* زر البدء بالصيانة (Start Repair) */
-.btn-start {
-    -fx-background-color: #f59e0b; /* برتقالي فخم */
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 15px;
-    -fx-background-radius: 8;
-    -fx-padding: 8 20;
-    -fx-cursor: hand;
-}
+/* الأزرار (نفس ما هي) */
+.btn-start { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; }
 .btn-start:hover { -fx-background-color: #d97706; }
-.btn-start:disabled { -fx-background-color: #fcd34d; -fx-text-fill: #fffbeb; -fx-cursor: default; }
+.btn-start:disabled { -fx-background-color: rgba(245, 158, 11, 0.5); -fx-text-fill: rgba(255,255,255,0.7); -fx-cursor: default; }
 
-/* زر إنهاء الصيانة (Finish) */
-.btn-finish {
-    -fx-background-color: #3b82f6; /* أزرق */
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 15px;
-    -fx-background-radius: 8;
-    -fx-padding: 8 20;
-    -fx-cursor: hand;
-}
+.btn-finish { -fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; }
 .btn-finish:hover { -fx-background-color: #2563eb; }
-.btn-finish:disabled { -fx-background-color: #93c5fd; -fx-text-fill: #eff6ff; -fx-cursor: default; }
+.btn-finish:disabled { -fx-background-color: rgba(59, 130, 246, 0.5); -fx-text-fill: rgba(255,255,255,0.7); -fx-cursor: default; }
+
+/* =========================================
+   👈 تظبيط الـ Hyperlink (رابط اسم الجهاز)
+   ========================================= */
+.tech-hyperlink {
+    -fx-text-fill: #1e293b !important; /* نفس لون النصوص (أسود/كحلي داكن جداً) */
+    -fx-underline: true !important; /* الخط بضل موجود عشان يبين إنه رابط */
+    -fx-font-family: "Segoe UI" !important;
+    -fx-font-size: 16px !important;
+    -fx-font-weight: bold !important;
+    -fx-border-color: transparent !important; /* إخفاء الإطار المزعج */
+    -fx-focus-color: transparent !important; /* إخفاء مربع التحديد لما تضغط عليه */
+    -fx-faint-focus-color: transparent !important;
+    -fx-padding: 0 !important;
+}
+
+/* حركة الماوس (Hover) */
+.tech-hyperlink:hover {
+    -fx-text-fill: #2563eb !important; /* بصير أزرق فخم وواضح لما تمرر الماوس */
+    -fx-cursor: hand !important;
+}
+
+/* بعد الضغط عليه (Visited) */
+.tech-hyperlink:visited {
+    -fx-text-fill: #1e293b !important; /* منع تحوله للون البنفسجي الغلط */
+}

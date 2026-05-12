@@ -12,68 +12,67 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<StackPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.techfix.controller.TechDashboardController">
+<StackPane styleClass="tech-root-pane" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.techfix.controller.TechDashboardController">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1000.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/tech.png" />
          </image>
       </ImageView>
-      <SplitPane dividerPositions="0.3" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: transparent; -fx-padding: 10;" stylesheets="@../style.css">
+      <SplitPane dividerPositions="0.3" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: transparent; -fx-padding: 10;" styleClass="tech-pane" stylesheets="@../style.css">
       
           <items>
       
               <!-- LEFT SIDE -->
-              <VBox prefWidth="300.0" spacing="10.0" style="-fx-background-color: rgba(255, 255, 255, 0.5); fx-background-radius: 10; fx-padding: 15;">
+              <VBox prefWidth="300.0" spacing="10.0" style="-fx-background-color: rgba(255, 255, 255, 0.5); fx-background-radius: 10; fx-padding: 15;" styleClass="tech-glass-vbox">
                   <children>
-                      <Label text="Devices Requiring Service" />
-                      <ListView fx:id="deviceListView" VBox.vgrow="ALWAYS" />
+                      <Label styleClass="tech-section-title" stylesheets="@../style.css" text="Devices Requiring Service" />
+                      <ListView fx:id="deviceListView" styleClass="tech-list-view" stylesheets="@../style.css" VBox.vgrow="ALWAYS" />
                   </children>
               </VBox>
       
               <!-- RIGHT SIDE -->
-              <VBox spacing="10.0" style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10; fx-padding: 15;">
+              <VBox spacing="10.0" style="-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 10; fx-padding: 15;" styleClass="tech-glass-vbox">
       
                   <children>
       
-                      <Label style="-fx-font-weight: bold;" text="Customer Information" />
+                      <Label styleClass="tech-section-title" stylesheets="@../style.css" text="Customer Information" />
       
                       <!-- FULL NAME -->
                       <HBox spacing="10">
-                          <Label text="Full Name:" />
-                          <Label fx:id="fullNameLabel" text="-" />
-                          <Label fx:id="statusLabel" style="-fx-font-weight: bold;" text="Pending" />
+                          <Label styleClass="tech-info-label" stylesheets="@../style.css" text="Full Name:" />
+                          <Label fx:id="fullNameLabel" styleClass="tech-info-label" stylesheets="@../style.css" text="-" />
+                          <Label fx:id="statusLabel" styleClass="status-badge" stylesheets="@../style.css" text="Pending" />
                       </HBox>
       
                       <!-- CITY -->
                       <HBox spacing="10">
-                          <Label text="City:" />
-                          <Label fx:id="cityLabel" text="-" />
+                          <Label styleClass="tech-info-label" stylesheets="@../style.css" text="City:" />
+                          <Label fx:id="cityLabel" styleClass="tech-info-label" stylesheets="@../style.css" text="-" />
                       </HBox>
       
                       <!-- PHONE -->
                       <HBox spacing="10">
-                          <Label text="Phone:" />
-                          <Label fx:id="phoneLabel" text="-" />
+                          <Label styleClass="tech-info-label" stylesheets="@../style.css" text="Phone:" />
+                          <Label fx:id="phoneLabel" styleClass="tech-info-label" stylesheets="@../style.css" text="-" />
                       </HBox>
       
                       <!-- DEVICE -->
                       <HBox spacing="10">
-                          <Label text="Device:" />
-                          <Hyperlink fx:id="deviceLink" text="-" />
+                          <Label styleClass="tech-info-label" stylesheets="@../style.css" text="Device:" />
+                          <Hyperlink fx:id="deviceLink" onAction="#handleDeviceClick" styleClass="tech-hyperlink" stylesheets="@../style.css" text="-" />
                       </HBox>
       
                       <!-- DESCRIPTION -->
-                      <Label style="-fx-text-fill: red;" text="Problem Description:" />
+                      <Label styleClass="tech-info-label" stylesheets="@../style.css" text="Problem Description:" />
       
-                      <TextArea fx:id="problemDescriptionArea" prefHeight="200" wrapText="true" VBox.vgrow="ALWAYS" />
+                      <TextArea fx:id="problemDescriptionArea" prefHeight="200" styleClass="tech-text-area" stylesheets="@../style.css" wrapText="true" VBox.vgrow="ALWAYS" />
       
                       <!-- BUTTONS -->
                       <HBox spacing="10">
-                          <Button fx:id="startRepairButton" onAction="#handleStartRepair" text="Start Repair" />
+                          <Button fx:id="startRepairButton" onAction="#handleStartRepair" styleClass="btn-start" stylesheets="@../style.css" text="Start Repair" />
       
-                          <Button fx:id="finishButton" onAction="#handleFinish" text="Finish / Done" />
+                          <Button fx:id="finishButton" onAction="#handleFinish" styleClass="btn-finish" stylesheets="@../style.css" text="Finish / Done" />
                       </HBox>
       
                   </children>

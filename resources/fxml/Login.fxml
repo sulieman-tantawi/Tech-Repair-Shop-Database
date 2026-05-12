@@ -56,7 +56,7 @@
                   <Insets />
                </VBox.margin>
             </VBox>
-            <Button alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="45.0" prefWidth="150.0" styleClass="my-btn" text="Login">
+            <Button alignment="CENTER" defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleLoginButton" prefHeight="45.0" prefWidth="150.0" styleClass="my-btn" text="Login">
                <font>
                   <Font size="18.0" />
                </font>

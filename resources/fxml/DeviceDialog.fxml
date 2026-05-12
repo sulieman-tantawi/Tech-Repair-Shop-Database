@@ -33,7 +33,8 @@
             <ComboBox fx:id="typeComboBox" prefWidth="350.0" promptText="Device Type" styleClass="dialog-combo-box" />
             <TextField fx:id="modelField" prefHeight="35.0" promptText="Model" styleClass="dialog-input" />
             <TextField fx:id="colorField" prefHeight="35.0" promptText="Color" styleClass="dialog-input" />
-            <TextField fx:id="serialNumberField" prefHeight="35.0" promptText="Serial Number (IMEI / SN)" styleClass="dialog-input">
+            <TextField fx:id="serialNumberField" prefHeight="35.0" promptText="Serial Number (IMEI / SN)" styleClass="dialog-input" />
+            <TextField fx:id="txtDevicePin" prefHeight="35.0" promptText="Password / PIN (Optional)" styleClass="dialog-input">
                <VBox.margin>
                   <Insets bottom="30.0" />
                </VBox.margin></TextField>

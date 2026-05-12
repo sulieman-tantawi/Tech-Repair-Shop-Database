@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox prefHeight="500.0" prefWidth="750.0" spacing="15.0" style="-fx-background-color: #f8fafc; -fx-padding: 20;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.techfix.controller.CheckoutController">
+   <children>
+      <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" text="Ready for Pickup &amp; Payment" />
+      <Separator prefWidth="200.0" />
+      
+      <TableView fx:id="readyTable" prefHeight="300.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <columns>
+          <TableColumn fx:id="colJobId" prefWidth="70.0" text="Job ID" />
+          <TableColumn fx:id="colCustomer" prefWidth="160.0" text="Customer Name" />
+          <TableColumn fx:id="colPhone" prefWidth="120.0" text="Phone" />
+          <TableColumn fx:id="colDevice" prefWidth="180.0" text="Device" />
+          <TableColumn fx:id="colCost" prefWidth="100.0" text="Total Cost ($)" />
+        </columns>
+      </TableView>
+      
+      <HBox alignment="CENTER_LEFT" spacing="15.0" style="-fx-background-color: #e2e8f0; -fx-padding: 15; -fx-background-radius: 8;">
+         <children>
+            <Label fx:id="selectedJobLabel" minWidth="-Infinity" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #334155;" text="Selected: None" wrapText="true" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label style="-fx-font-weight: bold;" text="Payment Method:" wrapText="true" />
+            <ComboBox fx:id="paymentMethodCombo" prefWidth="120.0" />
+            <Button mnemonicParsing="false" onAction="#handlePayAndDeliver" style="-fx-background-color: #10b981; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 8 20;" text="Pay &amp; Deliver" wrapText="true" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

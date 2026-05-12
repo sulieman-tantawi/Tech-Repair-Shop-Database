@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="350.0" prefWidth="450.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.techfix.controller.DevicePopupController">
+   <children>
+      <VBox layoutX="20.0" layoutY="20.0" prefHeight="310.0" prefWidth="410.0" spacing="15.0" styleClass="tech-glass-vbox" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Label styleClass="tech-section-title" text="Device Full Details" />
+            <Separator prefWidth="200.0" style="-fx-opacity: 0.5; -fx-background-color: #000000;" />
+            
+            <GridPane vgap="15.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="180.0" minWidth="10.0" prefWidth="130.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="253.0" minWidth="10.0" prefWidth="240.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label style="-fx-text-fill: #475569;" styleClass="tech-info-label" text="Brand &amp; Model:" GridPane.rowIndex="0" />
+                  <Label fx:id="lblBrand" styleClass="tech-info-label" text="Lenovo ThinkPad X1" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                  
+                  <Label style="-fx-text-fill: #475569;" styleClass="tech-info-label" text="Serial Number:" GridPane.rowIndex="1" />
+                  <Label fx:id="lblSerial" styleClass="tech-info-label" text="SN-9876543210" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  
+                  <Label style="-fx-text-fill: #475569;" styleClass="tech-info-label" text="Password / PIN:" GridPane.rowIndex="2" />
+                  <Label fx:id="lblPassword" styleClass="tech-info-label" text="1234" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                  <Label style="-fx-text-fill: #475569;" styleClass="tech-info-label" text="Accessories:" GridPane.rowIndex="3" />
+                  <Label fx:id="lblAccessories" styleClass="tech-info-label" text="Charger, Laptop Bag" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+            
+            <Region VBox.vgrow="ALWAYS" />
+            
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleClosePopup" styleClass="btn-cancel" text="Close" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
