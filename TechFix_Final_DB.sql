@@ -27,7 +27,7 @@ CREATE TABLE `brand` (
   `BrandName` varchar(50) NOT NULL,
   `OriginCountry` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`BrandID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -36,7 +36,7 @@ CREATE TABLE `brand` (
 
 LOCK TABLES `brand` WRITE;
 /*!40000 ALTER TABLE `brand` DISABLE KEYS */;
-INSERT INTO `brand` VALUES (1,'Dell','USA'),(2,'HP','USA'),(3,'Apple','USA'),(4,'Samsung','Korea'),(5,'Lenovo','China'),(6,'Asus','Taiwan');
+INSERT INTO `brand` VALUES (1,'Dell','USA'),(2,'HP','USA'),(3,'Apple','USA'),(4,'Samsung','Korea'),(5,'Lenovo','China'),(6,'Asus','Taiwan'),(7,'Sony','Japan');
 /*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -80,11 +80,12 @@ CREATE TABLE `customer` (
   `Phone` varchar(15) NOT NULL,
   `Address` varchar(255) DEFAULT NULL,
   `CityID` int DEFAULT NULL,
+  `IsActive` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`CustomerID`),
   UNIQUE KEY `Phone` (`Phone`),
   KEY `CityID` (`CityID`),
   CONSTRAINT `customer_ibfk_1` FOREIGN KEY (`CityID`) REFERENCES `city` (`CityID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,7 +94,7 @@ CREATE TABLE `customer` (
 
 LOCK TABLES `customer` WRITE;
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
-INSERT INTO `customer` VALUES (1,'Mohammed Ali','Mohammed','Ali','0599000001','Rafidia St',1),(2,'Khaled Omar','Khaled','Omar','0569000002','Al-Irsal St',2),(3,'Noor Hassan','Noor','Hassan','0599000003','Haifa St',3),(4,'Ibrahim Salem','Ibrahim','Salem','0598000004','Ein Sara',4),(5,'Mona Zaid','Mona','Zaid','0568000005','Paris St',5),(6,'Yasar Qasim','Yasar','Qasim','0597000006','Main St',1),(7,'Huda Jaber','Huda','Jaber','0595000007','Old City',2);
+INSERT INTO `customer` VALUES (1,'Ahmad Masri','Ahmad','Masri','0599111222','Rafidia Main St',1,1),(2,'Sara Zaid','Sara','Zaid','0568222333','Al-Masyoun',2,1),(3,'Tariq Jabari','Tariq','Jabari','0597333444','Ein Sara',4,1),(4,'Lina Awad','Lina','Awad','0595444555','Haifa St',3,1),(5,'Mahmoud Saleh','Mahmoud','Saleh','0569555666','Shweika',5,1),(6,'Yasmine Nader','Yasmine','Nader','0599666777','Al-Irsal St',2,1),(7,'Omar Kanaan','Omar','Kanaan','0598777888','Old City',1,1),(8,'Hala Qasim','Hala','Qasim','0568888999','University St',1,1),(9,'Ibrahim Salem','Ibrahim','Salem','0599999000','Al-Manara',2,1),(10,'Karam Saif','Karam','Saif','0567111222','Wadi Tuffah',4,1),(11,'Rami Jaber','Rami','Jaber','0599222333','Makhfiya',1,1),(12,'Suha Nabil','Suha','Nabil','0599333444','Iktaba',5,1),(13,'Majd Hasan','Majd','Hasan','0569444555','Jenin Camp',3,1),(14,'Dana Fouad','Dana','Fouad','0599555666','Al-Makhfiya',1,1),(15,'Ziad Ammar','Ziad','Ammar','0599666111','Al-Tira',2,1);
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -109,9 +110,11 @@ CREATE TABLE `device` (
   `SerialNo` varchar(50) NOT NULL,
   `Model` varchar(100) NOT NULL,
   `Color` varchar(30) DEFAULT NULL,
+  `DevicePIN` varchar(20) DEFAULT NULL,
   `CustomerID` int DEFAULT NULL,
   `BrandID` int DEFAULT NULL,
   `TypeID` int DEFAULT NULL,
+  `Accessories` varchar(255) DEFAULT 'None',
   PRIMARY KEY (`DeviceID`),
   UNIQUE KEY `SerialNo` (`SerialNo`),
   KEY `CustomerID` (`CustomerID`),
@@ -120,7 +123,7 @@ CREATE TABLE `device` (
   CONSTRAINT `device_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customer` (`CustomerID`),
   CONSTRAINT `device_ibfk_2` FOREIGN KEY (`BrandID`) REFERENCES `brand` (`BrandID`),
   CONSTRAINT `device_ibfk_3` FOREIGN KEY (`TypeID`) REFERENCES `device_type` (`TypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,7 +132,7 @@ CREATE TABLE `device` (
 
 LOCK TABLES `device` WRITE;
 /*!40000 ALTER TABLE `device` DISABLE KEYS */;
-INSERT INTO `device` VALUES (1,'SN101','Inspiron 15','Silver',1,1,1),(2,'SN102','Galaxy S21','Black',2,4,2),(3,'SN103','MacBook Pro','Gray',3,3,1),(4,'SN104','Pavilion 15','Blue',4,2,1),(5,'SN105','ThinkPad X1','Black',5,5,1),(6,'SN106','iPhone 13','White',6,3,2),(7,'SN107','PlayStation 5','White',7,6,4),(8,'SN108','Galaxy Tab S7','Gray',1,4,3);
+INSERT INTO `device` VALUES (1,'SN-1001','Legion 5 Pro','Gray','1234',1,5,1,'Charger, Laptop Bag'),(2,'SN-1002','iPhone 13 Pro','Blue','000000',2,3,2,'Clear Case, Original Box'),(3,'SN-1003','Galaxy S23 Ultra','Black',NULL,3,4,2,'Clear Case, Original Box'),(4,'SN-1004','MacBook Air M1','Silver','1122',4,3,1,'Charger, Laptop Bag'),(5,'SN-1005','Inspiron 15 3000','Black','2580',5,1,1,'Charger, Laptop Bag'),(6,'SN-1006','PlayStation 5','White',NULL,6,7,4,'1 Controller, Power Cable'),(7,'SN-1007','iPad Pro 11','Space Gray','147258',7,3,3,'Stylus Pen, Cover'),(8,'SN-1008','TUF Gaming F15','Black','1234',8,6,1,'Charger, Laptop Bag'),(9,'SN-1009','Pavilion 15','Silver','8899',9,2,1,'Charger, Laptop Bag'),(10,'SN-1010','Galaxy Tab S8','Gray','0000',10,4,3,'Stylus Pen, Cover'),(11,'SN-1011','Custom PC Build','RGB Black','1111',11,6,5,'None'),(12,'SN-1012','iPhone 14','Purple','123123',12,3,2,'Clear Case, Original Box'),(13,'SN-1013','ThinkPad T14','Black','5566',13,5,1,'Charger, Laptop Bag'),(14,'SN-1014','XPS 13','Silver',NULL,14,1,1,'Charger, Laptop Bag'),(15,'SN-1015','ROG Zephyrus','White','0987',15,6,1,'Charger, Laptop Bag');
 /*!40000 ALTER TABLE `device` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -169,7 +172,7 @@ CREATE TABLE `item` (
   `Name` varchar(100) NOT NULL,
   `Price` decimal(10,2) NOT NULL,
   PRIMARY KEY (`ItemID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -178,7 +181,7 @@ CREATE TABLE `item` (
 
 LOCK TABLES `item` WRITE;
 /*!40000 ALTER TABLE `item` DISABLE KEYS */;
-INSERT INTO `item` VALUES (1,'Screen 15.6 Inch',50.00),(2,'SSD 512GB Samsung',60.00),(3,'RAM 8GB DDR4',35.00),(4,'Battery Dell Original',45.00),(5,'Format & Windows',20.00),(6,'Deep Cleaning',15.00),(7,'Motherboard Repair',100.00),(8,'Data Recovery',150.00);
+INSERT INTO `item` VALUES (1,'RAM 8GB DDR4',35.00),(2,'RAM 16GB DDR4',60.00),(3,'RAM 16GB DDR5',110.00),(4,'SSD 256GB NVMe',45.00),(5,'SSD 512GB NVMe',75.00),(6,'SSD 1TB NVMe',130.00),(7,'SSD 2TB NVMe',250.00),(8,'Laptop Screen 15.6\" IPS',120.00),(9,'Smartphone OLED Screen Panel',180.00),(10,'Laptop Battery - Standard',60.00),(11,'Smartphone Battery',40.00),(12,'Cooling Fan Replacement',25.00),(13,'Charging Port Module',20.00),(14,'High-End Thermal Paste',15.00),(15,'OS Installation (Windows/Mac)',30.00),(16,'Deep Cleaning & Repaste',45.00),(17,'Basic Device Diagnostic',15.00),(18,'Motherboard IC Micro-Soldering',120.00),(19,'Basic Data Recovery',75.00),(20,'Advanced Data Recovery',250.00),(21,'Screen Protector & Apply',10.00),(22,'MacBook Replacement Battery (Air/Pro)',110.00),(23,'Laptop Replacement Keyboard (Various)',35.00),(24,'Type-C 65W Universal Laptop Charger',35.00),(25,'iPhone Charging IC (U2 Tristar)',25.00),(26,'Laptop Hinge Replacement Set',25.00),(27,'CMOS Battery (CR2032)',5.00),(28,'Hard Drive Caddy 9.5mm',15.00),(29,'Thermal Pads for GPU/CPU',12.00);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -206,7 +209,7 @@ CREATE TABLE `job_item` (
 
 LOCK TABLES `job_item` WRITE;
 /*!40000 ALTER TABLE `job_item` DISABLE KEYS */;
-INSERT INTO `job_item` VALUES (1,1,1),(1,5,1),(2,5,1),(4,2,1),(4,7,1),(6,1,1),(6,8,1),(7,5,1),(8,1,1),(8,4,1);
+INSERT INTO `job_item` VALUES (1,2,1),(1,3,1),(2,9,1),(3,12,1),(3,16,1),(4,15,1),(4,19,1),(5,7,1),(5,16,1),(7,10,1),(8,7,1),(8,12,6),(8,15,1),(8,16,1),(9,6,1),(9,15,1),(11,14,1);
 /*!40000 ALTER TABLE `job_item` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -220,11 +223,7 @@ UNLOCK TABLES;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `UpdateTotalCost` AFTER INSERT ON `job_item` FOR EACH ROW BEGIN
     DECLARE item_price DECIMAL(10, 2);
-    
-    -- Get the price of the item
     SELECT Price INTO item_price FROM `Item` WHERE ItemID = NEW.ItemID;
-    
-    -- Add the price * quantity to the job's TotalCost
     UPDATE `Maintenance_Job`
     SET TotalCost = IFNULL(TotalCost, 0) + (item_price * NEW.Quantity)
     WHERE JobID = NEW.JobID;
@@ -247,7 +246,7 @@ CREATE TABLE `maintenance_job` (
   `ProblemDescription` text,
   `DateIn` datetime DEFAULT CURRENT_TIMESTAMP,
   `DateOut` datetime DEFAULT NULL,
-  `TotalCost` decimal(10,2) DEFAULT NULL,
+  `TotalCost` decimal(10,2) DEFAULT '0.00',
   `DeviceID` int DEFAULT NULL,
   `UserID` int DEFAULT NULL,
   `StatusID` int DEFAULT NULL,
@@ -258,7 +257,7 @@ CREATE TABLE `maintenance_job` (
   CONSTRAINT `maintenance_job_ibfk_1` FOREIGN KEY (`DeviceID`) REFERENCES `device` (`DeviceID`),
   CONSTRAINT `maintenance_job_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`),
   CONSTRAINT `maintenance_job_ibfk_3` FOREIGN KEY (`StatusID`) REFERENCES `status` (`StatusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -267,7 +266,7 @@ CREATE TABLE `maintenance_job` (
 
 LOCK TABLES `maintenance_job` WRITE;
 /*!40000 ALTER TABLE `maintenance_job` DISABLE KEYS */;
-INSERT INTO `maintenance_job` VALUES (1,'Broken Screen','2024-04-01 00:00:00',NULL,70.00,1,2,4),(2,'Slow Performance','2024-04-02 00:00:00',NULL,20.00,2,2,4),(3,'Battery Issue','2024-04-03 00:00:00',NULL,0.00,3,2,1),(4,'Blue Screen Error','2024-04-04 00:00:00',NULL,160.00,4,1,4),(5,'Keyboard Stuck','2024-04-05 00:00:00',NULL,0.00,5,2,3),(6,'No Power','2024-04-06 00:00:00',NULL,200.00,7,1,2),(7,'Virus Removal','2024-04-07 00:00:00',NULL,20.00,6,2,5),(8,'Screen Crack','2024-04-08 00:00:00',NULL,95.00,8,2,4);
+INSERT INTO `maintenance_job` VALUES (1,'Upgrade storage and RAM','2024-04-01 10:00:00','2024-04-02 12:00:00',260.00,1,2,5),(2,'Broken screen needs replacement','2024-04-02 11:30:00','2024-04-04 14:00:00',260.00,2,2,5),(3,'Overheating and shutting down','2024-04-05 09:15:00',NULL,90.00,8,2,4),(4,'Format and backup files','2024-04-06 14:20:00',NULL,150.00,4,2,4),(5,'Keyboard keys not working','2026-05-01 10:00:00','2026-05-12 00:00:00',295.00,5,2,5),(6,'HDMI port broken on PS5','2026-05-02 16:45:00',NULL,0.00,6,1,2),(7,'Battery drains in 1 hour','2026-05-03 11:00:00','2026-05-05 00:00:00',90.00,14,2,5),(8,'Dead completely, no signs of life','2026-05-04 09:00:00','2026-05-05 00:00:00',375.00,11,2,5),(9,'Upgrade to 1TB SSD','2026-05-04 12:30:00','2026-05-05 10:00:00',270.00,13,2,5),(10,'Stuck on Apple Logo','2026-05-05 08:30:00',NULL,0.00,12,2,1),(11,'Needs screen protector and checkup','2026-05-05 14:00:00','2026-05-06 00:00:00',10.00,3,2,4),(12,'Fans making grinding noise','2026-05-05 15:30:00',NULL,0.00,15,2,1);
 /*!40000 ALTER TABLE `maintenance_job` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -293,7 +292,7 @@ CREATE TABLE `part` (
 
 LOCK TABLES `part` WRITE;
 /*!40000 ALTER TABLE `part` DISABLE KEYS */;
-INSERT INTO `part` VALUES (1,10,'6 Months'),(2,8,'3 Years'),(3,20,'1 Year'),(4,5,'6 Months');
+INSERT INTO `part` VALUES (1,20,'1 Year'),(2,15,'1 Year'),(3,10,'1 Year'),(4,25,'3 Years'),(5,30,'3 Years'),(6,15,'3 Years'),(7,3,'3 Years'),(8,8,'6 Months'),(9,5,'6 Months'),(10,12,'6 Months'),(11,20,'6 Months'),(12,9,'1 Month'),(13,30,'1 Month'),(14,49,'None'),(22,5,NULL),(23,10,NULL),(24,15,NULL),(25,20,NULL),(26,8,NULL),(27,50,NULL),(28,12,NULL),(29,25,NULL);
 /*!40000 ALTER TABLE `part` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -306,13 +305,14 @@ DROP TABLE IF EXISTS `payment`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `payment` (
   `JobID` int NOT NULL,
-  `PaymentID` int NOT NULL,
+  `PaymentID` int NOT NULL AUTO_INCREMENT,
   `Amount` decimal(10,2) NOT NULL,
   `PaymentDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `Method` varchar(50) DEFAULT NULL,
-  PRIMARY KEY (`JobID`,`PaymentID`),
+  PRIMARY KEY (`PaymentID`),
+  KEY `JobID` (`JobID`),
   CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`JobID`) REFERENCES `maintenance_job` (`JobID`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +321,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` VALUES (1,1,70.00,'2026-03-06 05:22:23','Cash'),(2,1,20.00,'2026-03-06 05:22:23','Cash'),(4,1,100.00,'2026-03-06 05:22:23','Card'),(4,2,60.00,'2026-03-06 05:22:23','Cash'),(7,1,20.00,'2026-03-06 05:22:23','Cash'),(8,1,95.00,'2026-03-06 05:22:23','Card');
+INSERT INTO `payment` VALUES (1,1,130.00,'2024-04-02 12:05:00','Cash'),(2,2,130.00,'2024-04-04 14:10:00','Visa'),(9,3,135.00,'2026-05-05 10:15:00','Cash'),(5,5,295.00,'2026-05-12 00:00:00','Cash'),(7,7,90.00,'2026-05-05 00:00:00','Cash'),(8,8,375.00,'2026-05-05 00:00:00','Cash');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -342,7 +342,7 @@ CREATE TABLE `review` (
   UNIQUE KEY `JobID` (`JobID`),
   CONSTRAINT `review_ibfk_1` FOREIGN KEY (`JobID`) REFERENCES `maintenance_job` (`JobID`),
   CONSTRAINT `review_chk_1` CHECK ((`Rating` between 1 and 5))
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -351,7 +351,7 @@ CREATE TABLE `review` (
 
 LOCK TABLES `review` WRITE;
 /*!40000 ALTER TABLE `review` DISABLE KEYS */;
-INSERT INTO `review` VALUES (1,5,'Excellent and fast!','2026-03-06 05:22:23',1),(2,4,'Good job but expensive','2026-03-06 05:22:23',4),(3,5,'My phone works perfectly now','2026-03-06 05:22:23',7);
+INSERT INTO `review` VALUES (1,5,'Upgraded my laptop to SSD, it flies now! Thanks!','2024-04-03 10:00:00',1),(2,4,'Screen replacement was fast, a bit expensive though.','2024-04-05 11:00:00',2);
 /*!40000 ALTER TABLE `review` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -401,7 +401,7 @@ CREATE TABLE `service` (
 
 LOCK TABLES `service` WRITE;
 /*!40000 ALTER TABLE `service` DISABLE KEYS */;
-INSERT INTO `service` VALUES (5,'2 Hours'),(6,'1 Hour'),(7,'3 Days'),(8,'5 Days');
+INSERT INTO `service` VALUES (15,'2 Hours'),(16,'1 Hour'),(17,'30 Mins'),(18,'3 Days'),(19,'2 Days'),(20,'5 Days'),(21,'15 Mins');
 /*!40000 ALTER TABLE `service` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -442,7 +442,7 @@ CREATE TABLE `supplier` (
   `ContactPhone` varchar(20) DEFAULT NULL,
   `Email` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`SupplierID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -451,7 +451,7 @@ CREATE TABLE `supplier` (
 
 LOCK TABLES `supplier` WRITE;
 /*!40000 ALTER TABLE `supplier` DISABLE KEYS */;
-INSERT INTO `supplier` VALUES (1,'Global Tech','0599111111','info@global.com'),(2,'West Bank Parts','0568222222','sales@wb.com'),(3,'Jerusalem Electronics','0544333333','j_elec@store.com');
+INSERT INTO `supplier` VALUES (1,'BCI Mobile','+970-2-294-6600','info.ps@bci.tech'),(2,'Akram Sbitany & Sons','1-700-550-110','info@sbitany.com'),(3,'Mega Technology','+970-2-297-6060','info@megatech.ps'),(4,'Click Computer & Mobile','+970-59-998-6680','click-service@live.com'),(5,'BIS Distribution','+970-2-295-0717','info@bis-distribution.com'),(6,'Watani Mall','+970-9-238-6666','info@watanimall.ps');
 /*!40000 ALTER TABLE `supplier` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -478,7 +478,7 @@ CREATE TABLE `supplier_part` (
 
 LOCK TABLES `supplier_part` WRITE;
 /*!40000 ALTER TABLE `supplier_part` DISABLE KEYS */;
-INSERT INTO `supplier_part` VALUES (1,1),(1,2),(2,3),(2,4);
+INSERT INTO `supplier_part` VALUES (3,1),(4,1),(6,1),(3,2),(6,2),(4,3),(6,3),(3,4),(4,4),(6,4),(3,5),(6,5),(5,6),(6,6),(3,7),(4,7),(6,7),(5,8),(6,8),(1,9),(2,9),(3,10),(6,10),(1,11),(2,11),(4,12),(6,12),(1,13),(4,14),(6,14),(5,22),(6,22),(3,23),(5,23),(3,24),(4,24),(6,24),(1,25),(4,25),(3,26),(4,26),(3,27),(4,27),(3,28),(4,28),(4,29),(6,29);
 /*!40000 ALTER TABLE `supplier_part` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -505,7 +505,7 @@ CREATE TABLE `user` (
   UNIQUE KEY `Email` (`Email`),
   KEY `RoleID` (`RoleID`),
   CONSTRAINT `user_ibfk_1` FOREIGN KEY (`RoleID`) REFERENCES `role` (`RoleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -514,7 +514,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin','240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9','Ahmad Khalil','Ahmad','Khalil','manager@tf.com','2023-01-01',4,1),(2,'tech1','pass123','Sami Yousef','Sami','Yousef','sami@tf.com','2023-03-15',2,1),(3,'recep1','a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3','Lara Nasser','Lara','Nasser','lara@tf.com','2023-06-01',3,1);
+INSERT INTO `user` VALUES (1,'admin','240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9','Ahmad Khalil','Ahmad','Khalil','manager@tf.com','2023-01-01',4,1),(2,'tech1','3ac40463b419a7de590185c7121f0bfbe411d6168699e8014f521b050b1d6653','Sami Yousef','Sami','Yousef','sami@tf.com','2023-03-15',2,1),(3,'recep1','5d37ed314cf2b5c8462b52b12cd512e2ac4a180e75598da4f12bfb0dea6d0a67','Lara Nasser','Lara','Nasser','lara@tf.com','2023-06-01',3,1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,4 +531,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-03-29 22:14:49
+-- Dump completed on 2026-05-12 19:16:46
