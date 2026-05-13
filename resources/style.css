@@ -29,7 +29,7 @@
 .my-btn:pressed { -fx-background-color: #005C99; -fx-background-insets: 0; }
 
 /* =========================================
-   3. ADMIN TABLE & TABS (كودك الأصلي - لإنقاذ الإدمن)
+   3. ADMIN TABLE & TABS
    ========================================= */
 .table-view .column-header-background {
     -fx-background-radius: 15 15 0 0;
@@ -85,7 +85,7 @@
 .table-cell { -fx-alignment: center; }
 
 /* =========================================
-   4. RECEPTION GLASS TABLE (مخصص بس للاستقبال)
+   4. RECEPTION GLASS TABLE
    ========================================= */
 .glass-table,
 .glass-table .viewport,
@@ -136,7 +136,7 @@
 }
 
 /* =========================================
-   5. DIALOG & POPUP STYLES (شاشات الإضافة المنبثقة)
+   5. DIALOG & POPUP STYLES
    ========================================= */
 .dialog-pane {
     -fx-background-color: #f8fafc;
@@ -187,43 +187,39 @@
 .btn-cancel:pressed { -fx-background-color: #b91c1c; }
 
 /* =========================================
-   6. TECHNICIAN DASHBOARD (شاشة الفني - Frosted Light Glass Edition)
+   6. TECHNICIAN DASHBOARD
    ========================================= */
 
 .tech-root-pane { -fx-background-image: url('../images/bg_repair.jpg'); -fx-background-size: cover; -fx-background-position: center center; }
 .tech-pane { -fx-background-color: transparent; -fx-padding: 10; }
 .tech-pane > .split-pane-divider { -fx-background-color: rgba(255, 255, 255, 0.4); }
 
-/* 👈 1. الزجاج المغبش (تقليل الشفافية لـ 85% أبيض عشان يعطي تأثير البلور ويبرز الأسود) */
 .tech-glass-vbox {
     -fx-background-color: rgba(255, 255, 255, 0.85) !important; 
     -fx-background-radius: 10;
     -fx-padding: 15;
 }
 
-/* 👈 2. العناوين باللون الأسود */
 .tech-section-title {
     -fx-font-size: 20px !important;
     -fx-font-weight: bold !important;
-    -fx-text-fill: #000000 !important; /* أسود صريح */
+    -fx-text-fill: #000000 !important;
     -fx-padding: 0 0 10 0 !important;
 }
 
-/* 👈 3. النصوص العادية (بيانات الزبون) باللون الأسود */
 .tech-info-label {
     -fx-font-size: 16px !important;
-    -fx-font-weight: bold !important; /* بولد عشان توضح أكثر */
-    -fx-text-fill: #1e293b !important; /* أسود/كحلي داكن جداً مريح للعين */
+    -fx-font-weight: bold !important; 
+    -fx-text-fill: #1e293b !important; 
 }
 
-/* 👈 4. مستطيل حالة الجهاز (الأحمر) - بناءً على طلبك */
 .status-badge {
     -fx-background-color: rgba(239, 68, 68, 0.15) !important; 
     -fx-border-color: #ef4444 !important; 
     -fx-border-width: 1.5 !important;
     -fx-border-radius: 6 !important;
     -fx-background-radius: 6 !important;
-    -fx-text-fill: #dc2626 !important; /* أحمر قوي ومقروء */
+    -fx-text-fill: #dc2626 !important; 
     -fx-font-weight: bold !important;
     -fx-font-size: 14px !important;
     -fx-padding: 4 10 !important;
@@ -231,7 +227,7 @@
 }
 
 /* =========================================
-   القائمة (ListView) - ألوان فاتحة وخط أسود
+  ListView
    ========================================= */
 .tech-list-view {
     -fx-background-color: transparent !important;
@@ -246,7 +242,7 @@
 
 .tech-list-view .list-cell {
     -fx-background-color: rgba(255, 255, 255, 0.6) !important; 
-    -fx-text-fill: #000000 !important; /* النص أسود */
+    -fx-text-fill: #000000 !important;
     -fx-font-family: "Segoe UI" !important;
     -fx-font-size: 15px !important;
     -fx-padding: 12 15 !important;
@@ -256,7 +252,6 @@
 
 .tech-list-view .list-cell:hover { -fx-background-color: rgba(255, 255, 255, 0.9) !important; -fx-cursor: hand !important; }
 
-/* لون الجهاز لما يتحدد (أزرق فاتح عشان الأسود يضل مقروء) */
 .tech-list-view .list-cell:selected {
     -fx-background-color: rgba(59, 130, 246, 0.3) !important; 
     -fx-text-fill: #000000 !important;
@@ -267,23 +262,19 @@
 .tech-list-view .list-cell:empty { -fx-background-color: transparent !important; -fx-border-width: 0 !important; }
 .tech-list-view .scroll-bar:horizontal { -fx-opacity: 0 !important; -fx-pref-height: 0 !important; }
 
-/* ========================================= */
-
-/* 👈 5. مربع وصف المشكلة (خلفية بيضا شفافة والنص أسود) */
 .tech-text-area {
     -fx-background-color: rgba(255, 255, 255, 0.7) !important; 
     -fx-control-inner-background: transparent !important; 
     -fx-border-color: rgba(0, 0, 0, 0.2) !important;
     -fx-border-radius: 8 !important;
     -fx-background-radius: 8 !important;
-    -fx-text-fill: #000000 !important; /* النص أسود */
+    -fx-text-fill: #000000 !important; 
     -fx-font-size: 16px !important;
 }
 .tech-text-area .scroll-pane, .tech-text-area .scroll-pane .viewport, .tech-text-area .scroll-pane .content {
     -fx-background-color: transparent !important; 
 }
 
-/* الأزرار (نفس ما هي) */
 .btn-start { -fx-background-color: #f59e0b; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 15px; -fx-background-radius: 8; -fx-padding: 8 20; -fx-cursor: hand; }
 .btn-start:hover { -fx-background-color: #d97706; }
 .btn-start:disabled { -fx-background-color: rgba(245, 158, 11, 0.5); -fx-text-fill: rgba(255,255,255,0.7); -fx-cursor: default; }
@@ -293,27 +284,25 @@
 .btn-finish:disabled { -fx-background-color: rgba(59, 130, 246, 0.5); -fx-text-fill: rgba(255,255,255,0.7); -fx-cursor: default; }
 
 /* =========================================
-   👈 تظبيط الـ Hyperlink (رابط اسم الجهاز)
+   Hyperlink
    ========================================= */
 .tech-hyperlink {
-    -fx-text-fill: #1e293b !important; /* نفس لون النصوص (أسود/كحلي داكن جداً) */
-    -fx-underline: true !important; /* الخط بضل موجود عشان يبين إنه رابط */
+    -fx-text-fill: #1e293b !important;
+    -fx-underline: true !important;
     -fx-font-family: "Segoe UI" !important;
     -fx-font-size: 16px !important;
     -fx-font-weight: bold !important;
-    -fx-border-color: transparent !important; /* إخفاء الإطار المزعج */
-    -fx-focus-color: transparent !important; /* إخفاء مربع التحديد لما تضغط عليه */
+    -fx-border-color: transparent !important; 
+    -fx-focus-color: transparent !important; 
     -fx-faint-focus-color: transparent !important;
     -fx-padding: 0 !important;
 }
 
-/* حركة الماوس (Hover) */
 .tech-hyperlink:hover {
-    -fx-text-fill: #2563eb !important; /* بصير أزرق فخم وواضح لما تمرر الماوس */
+    -fx-text-fill: #2563eb !important; 
     -fx-cursor: hand !important;
 }
 
-/* بعد الضغط عليه (Visited) */
 .tech-hyperlink:visited {
-    -fx-text-fill: #1e293b !important; /* منع تحوله للون البنفسجي الغلط */
+    -fx-text-fill: #1e293b !important; 
 }
