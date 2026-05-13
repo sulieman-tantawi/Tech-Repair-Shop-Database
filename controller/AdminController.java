@@ -73,6 +73,8 @@ public class AdminController implements Initializable {
     @FXML private TableColumn<InventoryItem, String> colInvSuppliers;
 
     private ObservableList<User> userList = FXCollections.observableArrayList();
+    private ObservableList<InventoryItem> inventoryMasterList = FXCollections.observableArrayList(); 
+    
     private int selectedUserId = 0;
     private int selectedInvId = 0;
 
@@ -193,6 +195,27 @@ public class AdminController implements Initializable {
             };
         });
 
+        javafx.collections.transformation.FilteredList<InventoryItem> filteredInvData = new javafx.collections.transformation.FilteredList<>(inventoryMasterList, b -> true);
+
+        invSearchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredInvData.setPredicate(item -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                
+                if (item.getName().toLowerCase().contains(lowerCaseFilter)) return true;
+                if (String.valueOf(item.getId()).contains(lowerCaseFilter)) return true;
+                if (item.getType().toLowerCase().contains(lowerCaseFilter)) return true;
+                
+                return false; 
+            });
+        });
+
+        javafx.collections.transformation.SortedList<InventoryItem> sortedInvData = new javafx.collections.transformation.SortedList<>(filteredInvData);
+        sortedInvData.comparatorProperty().bind(inventoryTable.comparatorProperty());
+        inventoryTable.setItems(sortedInvData);
+
         loadUserData();
         loadSystemReports();
         loadDashboardStats();
@@ -235,7 +258,6 @@ public class AdminController implements Initializable {
             }
         });
     }
-
 
     @FXML
     private void handleAddButton() {
@@ -771,30 +793,106 @@ public class AdminController implements Initializable {
     private void loadRevenueLineChart() {
         revenueLineChart.getData().clear();
         XYChart.Series<String, Number> series = new XYChart.Series<>();
-        series.setName("Daily Revenue");
-        String query = "SELECT PaymentDate, SUM(Amount) AS DailyTotal FROM payment GROUP BY PaymentDate ORDER BY PaymentDate ASC LIMIT 7";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+        series.setName("Revenue Transactions");
+
+        javafx.scene.chart.CategoryAxis xAxis = (javafx.scene.chart.CategoryAxis) revenueLineChart.getXAxis();
+        xAxis.setTickLabelRotation(0); 
+
+        String query = "SELECT PaymentDate, Amount FROM payment ORDER BY PaymentDate ASC LIMIT 12";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query);
+             ResultSet rs = stmt.executeQuery()) {
+
+            int counter = 1;
             while (rs.next()) {
-                series.getData().add(new XYChart.Data<>(rs.getString("PaymentDate"), rs.getDouble("DailyTotal")));
+                String fullDate = rs.getString("PaymentDate"); 
+                double amount = rs.getDouble("Amount");
+
+                String shortDate = fullDate;
+                
+                if (fullDate != null && fullDate.length() >= 10) {
+                    shortDate = fullDate.substring(5, 10);
+                }
+
+                String hiddenSpaces = new String(new char[counter]).replace("\0", "\u200B");
+                
+                String xAxisLabel = shortDate + hiddenSpaces;
+
+                XYChart.Data<String, Number> dataPoint = new XYChart.Data<>(xAxisLabel, amount);
+                
+                dataPoint.setExtraValue(fullDate);
+
+                series.getData().add(dataPoint);
+                counter++;
             }
+            
             revenueLineChart.getData().add(series);
-        } catch (Exception e) { e.printStackTrace(); }
+
+            for (XYChart.Data<String, Number> dataPoint : series.getData()) {
+                javafx.scene.Node node = dataPoint.getNode();
+                if (node != null) {
+                    String fullDate = (String) dataPoint.getExtraValue();
+                    javafx.scene.control.Tooltip tooltip = new javafx.scene.control.Tooltip("Transaction: " + fullDate + "\nPaid: $" + dataPoint.getYValue());
+                    tooltip.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #2c3e50; -fx-text-fill: white;");
+                    javafx.scene.control.Tooltip.install(node, tooltip);
+
+                    node.setOnMouseEntered(e -> node.setStyle("-fx-cursor: hand; -fx-scale-x: 1.8; -fx-scale-y: 1.8;"));
+                    node.setOnMouseExited(e -> node.setStyle("-fx-scale-x: 1; -fx-scale-y: 1;"));
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadBrandPieChart() {
-        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
-        String query = "SELECT b.BrandName, COUNT(m.JobID) AS BrandCount FROM maintenance_job m " +
-                       "JOIN device d ON m.DeviceID = d.DeviceID JOIN brand b ON d.BrandID = b.BrandID GROUP BY b.BrandName";
-        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+        javafx.collections.ObservableList<javafx.scene.chart.PieChart.Data> pieChartData = javafx.collections.FXCollections.observableArrayList();
+        
+        String query = "SELECT b.BrandName, COUNT(m.JobID) AS BrandCount " +
+                       "FROM maintenance_job m " +
+                       "JOIN device d ON m.DeviceID = d.DeviceID " +
+                       "JOIN brand b ON d.BrandID = b.BrandID " +
+                       "GROUP BY b.BrandName " +
+                       "ORDER BY BrandCount DESC LIMIT 5";
+
+        try (java.sql.Connection conn = DBConnection.getConnection(); 
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query); 
+             java.sql.ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                pieChartData.add(new PieChart.Data(rs.getString("BrandName"), rs.getInt("BrandCount")));
+                String brand = rs.getString("BrandName");
+                int count = rs.getInt("BrandCount");
+                
+                pieChartData.add(new javafx.scene.chart.PieChart.Data(brand + " (" + count + ")", count));
             }
+            
             brandPieChart.setData(pieChartData);
-        } catch (Exception e) { e.printStackTrace(); }
+
+            for (javafx.scene.chart.PieChart.Data data : brandPieChart.getData()) {
+                javafx.scene.Node node = data.getNode();
+                if (node != null) {
+                    javafx.scene.control.Tooltip tooltip = new javafx.scene.control.Tooltip("Brand: " + data.getName() + "\nRepaired: " + (int)data.getPieValue() + " Devices");
+                    tooltip.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-background-color: #2c3e50; -fx-text-fill: white;");
+                    javafx.scene.control.Tooltip.install(node, tooltip);
+
+                    node.setOnMouseEntered(e -> {
+                        node.setStyle("-fx-cursor: hand; -fx-opacity: 0.8; -fx-scale-x: 1.03; -fx-scale-y: 1.03;");
+                    });
+                    
+                    node.setOnMouseExited(e -> {
+                        node.setStyle("-fx-opacity: 1; -fx-scale-x: 1; -fx-scale-y: 1;");
+                    });
+                }
+            }
+        } catch (Exception e) { 
+            e.printStackTrace(); 
+        }
     }
     
     private void loadInventoryData() {
-        ObservableList<InventoryItem> invList = FXCollections.observableArrayList();
+        inventoryMasterList.clear(); 
         
         String query = "SELECT i.ItemID, i.Name, i.Price, " +
                        "CASE WHEN p.ItemID IS NOT NULL THEN 'Part' ELSE 'Service' END AS ItemType, " +
@@ -811,7 +909,7 @@ public class AdminController implements Initializable {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                invList.add(new InventoryItem(
+                inventoryMasterList.add(new InventoryItem(
                     rs.getInt("ItemID"),
                     rs.getString("Name"),
                     rs.getString("ItemType"),
@@ -820,8 +918,6 @@ public class AdminController implements Initializable {
                     rs.getString("Suppliers")
                 ));
             }
-            inventoryTable.setItems(invList);
-
         } catch (Exception e) {
             e.printStackTrace();
         }

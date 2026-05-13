@@ -1,6 +1,7 @@
 package com.techfix.controller;
 
 import com.techfix.util.DBConnection;
+import com.techfix.util.InvoiceManager; 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -83,12 +84,11 @@ public class CheckoutController {
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                String insertPayment = "INSERT INTO payment (JobID, PaymentID, Amount, PaymentDate, Method) VALUES (?, ?, ?, CURRENT_DATE, ?)";
+                String insertPayment = "INSERT INTO payment (JobID, Amount, PaymentDate, Method) VALUES (?, ?, CURRENT_DATE, ?)";
                 try (PreparedStatement payStmt = conn.prepareStatement(insertPayment)) {
                     payStmt.setInt(1, selectedJob.getJobId());      
-                    payStmt.setInt(2, selectedJob.getJobId());  
-                    payStmt.setDouble(3, selectedJob.getTotalCost());
-                    payStmt.setString(4, method);
+                    payStmt.setDouble(2, selectedJob.getTotalCost());
+                    payStmt.setString(3, method);
                     payStmt.executeUpdate();
                 }
 
@@ -98,8 +98,16 @@ public class CheckoutController {
                     jobStmt.executeUpdate();
                 }
 
-                conn.commit();
-                showAlert(Alert.AlertType.INFORMATION, "Success", "Payment recorded successfully! The device is now delivered.");
+                conn.commit(); 
+
+                try {
+                    InvoiceManager invoice = new InvoiceManager();
+                    invoice.generatePDF(selectedJob.getJobId());
+                } catch (Exception e) {
+                    System.out.println("Error generating PDF: " + e.getMessage());
+                }
+
+                showAlert(Alert.AlertType.INFORMATION, "Success", "Payment recorded successfully! The invoice has been generated.");
                 selectedJob = null;
                 selectedJobLabel.setText("Selected: None");
                 loadReadyJobs();
