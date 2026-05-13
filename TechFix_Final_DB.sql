@@ -209,7 +209,7 @@ CREATE TABLE `job_item` (
 
 LOCK TABLES `job_item` WRITE;
 /*!40000 ALTER TABLE `job_item` DISABLE KEYS */;
-INSERT INTO `job_item` VALUES (1,2,1),(1,3,1),(2,9,1),(3,12,1),(3,16,1),(4,15,1),(4,19,1),(5,7,1),(5,16,1),(7,10,1),(8,7,1),(8,12,6),(8,15,1),(8,16,1),(9,6,1),(9,15,1),(11,14,1);
+INSERT INTO `job_item` VALUES (1,2,1),(1,3,1),(2,9,1),(3,12,1),(3,16,1),(4,15,1),(4,19,1),(5,7,1),(5,16,1),(7,10,1),(8,7,1),(8,12,6),(8,15,1),(8,16,1),(9,6,1),(9,15,1),(11,14,1),(12,12,2),(12,16,1),(13,15,1),(13,16,1),(13,19,1),(14,15,1),(14,20,1),(15,12,2),(15,16,1),(16,9,1),(17,16,2),(18,12,2),(18,29,2),(19,14,2),(19,16,2);
 /*!40000 ALTER TABLE `job_item` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -257,7 +257,7 @@ CREATE TABLE `maintenance_job` (
   CONSTRAINT `maintenance_job_ibfk_1` FOREIGN KEY (`DeviceID`) REFERENCES `device` (`DeviceID`),
   CONSTRAINT `maintenance_job_ibfk_2` FOREIGN KEY (`UserID`) REFERENCES `user` (`UserID`),
   CONSTRAINT `maintenance_job_ibfk_3` FOREIGN KEY (`StatusID`) REFERENCES `status` (`StatusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -266,7 +266,7 @@ CREATE TABLE `maintenance_job` (
 
 LOCK TABLES `maintenance_job` WRITE;
 /*!40000 ALTER TABLE `maintenance_job` DISABLE KEYS */;
-INSERT INTO `maintenance_job` VALUES (1,'Upgrade storage and RAM','2024-04-01 10:00:00','2024-04-02 12:00:00',260.00,1,2,5),(2,'Broken screen needs replacement','2024-04-02 11:30:00','2024-04-04 14:00:00',260.00,2,2,5),(3,'Overheating and shutting down','2024-04-05 09:15:00',NULL,90.00,8,2,4),(4,'Format and backup files','2024-04-06 14:20:00',NULL,150.00,4,2,4),(5,'Keyboard keys not working','2026-05-01 10:00:00','2026-05-12 00:00:00',295.00,5,2,5),(6,'HDMI port broken on PS5','2026-05-02 16:45:00',NULL,0.00,6,1,2),(7,'Battery drains in 1 hour','2026-05-03 11:00:00','2026-05-05 00:00:00',90.00,14,2,5),(8,'Dead completely, no signs of life','2026-05-04 09:00:00','2026-05-05 00:00:00',375.00,11,2,5),(9,'Upgrade to 1TB SSD','2026-05-04 12:30:00','2026-05-05 10:00:00',270.00,13,2,5),(10,'Stuck on Apple Logo','2026-05-05 08:30:00',NULL,0.00,12,2,1),(11,'Needs screen protector and checkup','2026-05-05 14:00:00','2026-05-06 00:00:00',10.00,3,2,4),(12,'Fans making grinding noise','2026-05-05 15:30:00',NULL,0.00,15,2,1);
+INSERT INTO `maintenance_job` VALUES (1,'Upgrade storage and RAM','2024-04-01 10:00:00','2024-04-02 12:00:00',260.00,1,2,5),(2,'Broken screen needs replacement','2024-04-02 11:30:00','2024-04-04 14:00:00',260.00,2,2,5),(3,'Overheating and shutting down','2024-04-05 09:15:00','2026-05-12 00:00:00',90.00,8,2,5),(4,'Format and backup files','2024-04-06 14:20:00','2026-05-12 00:00:00',150.00,4,2,5),(5,'Keyboard keys not working','2026-05-01 10:00:00','2026-05-12 00:00:00',295.00,5,2,5),(7,'Battery drains in 1 hour','2026-05-03 11:00:00','2026-05-05 00:00:00',90.00,14,2,5),(8,'Dead completely, no signs of life','2026-05-04 09:00:00','2026-05-05 00:00:00',375.00,11,2,5),(9,'Upgrade to 1TB SSD','2026-05-04 12:30:00','2026-05-05 10:00:00',270.00,13,2,5),(10,'Stuck on Apple Logo','2026-05-05 08:30:00',NULL,0.00,12,2,1),(11,'Needs screen protector and checkup','2026-05-05 14:00:00','2026-05-12 00:00:00',10.00,3,2,5),(12,'Fans making grinding noise','2026-05-05 15:30:00','2026-05-12 00:00:00',95.00,15,2,5),(13,'Error 404','2026-05-13 00:00:00','2026-05-13 00:00:00',150.00,1,2,5),(14,'Software & Lost Data','2026-05-13 00:00:00','2026-05-13 00:00:00',280.00,4,2,4),(15,'Overheating','2026-05-13 00:00:00','2026-05-13 00:00:00',95.00,8,2,4),(16,'Broken Screen','2026-05-13 00:00:00','2026-05-13 00:00:00',180.00,2,2,4),(17,'Liquid Damage','2026-05-13 00:00:00','2026-05-13 00:00:00',90.00,5,2,4),(18,'Loud Fan Noise','2026-05-13 00:00:00','2026-05-13 00:00:00',74.00,6,2,4),(19,'Slow Performance','2026-05-13 00:00:00','2026-05-13 00:00:00',120.00,13,2,4),(20,'Power Supply failure','2026-05-13 00:00:00',NULL,0.00,11,2,1),(21,'Not charging','2026-05-13 00:00:00',NULL,0.00,3,2,2),(22,'Windows totally crashed','2026-05-13 00:00:00',NULL,0.00,9,2,2);
 /*!40000 ALTER TABLE `maintenance_job` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -292,7 +292,7 @@ CREATE TABLE `part` (
 
 LOCK TABLES `part` WRITE;
 /*!40000 ALTER TABLE `part` DISABLE KEYS */;
-INSERT INTO `part` VALUES (1,20,'1 Year'),(2,15,'1 Year'),(3,10,'1 Year'),(4,25,'3 Years'),(5,30,'3 Years'),(6,15,'3 Years'),(7,3,'3 Years'),(8,8,'6 Months'),(9,5,'6 Months'),(10,12,'6 Months'),(11,20,'6 Months'),(12,9,'1 Month'),(13,30,'1 Month'),(14,49,'None'),(22,5,NULL),(23,10,NULL),(24,15,NULL),(25,20,NULL),(26,8,NULL),(27,50,NULL),(28,12,NULL),(29,25,NULL);
+INSERT INTO `part` VALUES (1,20,'1 Year'),(2,15,'1 Year'),(3,10,'1 Year'),(4,25,'3 Years'),(5,30,'3 Years'),(6,15,'3 Years'),(7,3,'3 Years'),(8,8,'6 Months'),(9,4,'6 Months'),(10,12,'6 Months'),(11,20,'6 Months'),(12,3,'1 Month'),(13,30,'1 Month'),(14,47,'None'),(22,5,NULL),(23,10,NULL),(24,15,NULL),(25,20,NULL),(26,8,NULL),(27,50,NULL),(28,12,NULL),(29,23,NULL);
 /*!40000 ALTER TABLE `part` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -312,7 +312,7 @@ CREATE TABLE `payment` (
   PRIMARY KEY (`PaymentID`),
   KEY `JobID` (`JobID`),
   CONSTRAINT `payment_ibfk_1` FOREIGN KEY (`JobID`) REFERENCES `maintenance_job` (`JobID`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -321,7 +321,7 @@ CREATE TABLE `payment` (
 
 LOCK TABLES `payment` WRITE;
 /*!40000 ALTER TABLE `payment` DISABLE KEYS */;
-INSERT INTO `payment` VALUES (1,1,130.00,'2024-04-02 12:05:00','Cash'),(2,2,130.00,'2024-04-04 14:10:00','Visa'),(9,3,135.00,'2026-05-05 10:15:00','Cash'),(5,5,295.00,'2026-05-12 00:00:00','Cash'),(7,7,90.00,'2026-05-05 00:00:00','Cash'),(8,8,375.00,'2026-05-05 00:00:00','Cash');
+INSERT INTO `payment` VALUES (1,1,130.00,'2024-04-02 12:05:00','Cash'),(2,2,130.00,'2024-04-04 14:10:00','Visa'),(9,3,135.00,'2026-05-05 10:15:00','Cash'),(4,4,150.00,'2026-05-12 00:00:00','Cash'),(5,5,295.00,'2026-05-12 00:00:00','Cash'),(7,7,90.00,'2026-05-05 00:00:00','Cash'),(8,8,375.00,'2026-05-05 00:00:00','Cash'),(11,11,10.00,'2026-05-12 00:00:00','Cash'),(12,12,95.00,'2026-05-12 00:00:00','Cash'),(3,13,90.00,'2026-05-12 00:00:00','Cash'),(13,14,150.00,'2026-05-13 00:00:00','Visa');
 /*!40000 ALTER TABLE `payment` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -531,4 +531,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-05-12 19:16:46
+-- Dump completed on 2026-05-13 15:49:41
